@@ -64,7 +64,7 @@ body{font-family:'Noto Sans Thai',sans-serif;background:var(--bg);color:var(--t1
 .hero.sc{border-color:var(--pu);}
 .hero.sc::after{content:'';position:absolute;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--pu),transparent);animation:sw 1.5s ease-in-out infinite;}
 @keyframes sw{0%{top:5%;opacity:0}10%{opacity:1}90%{opacity:1}100%{top:95%;opacity:0}}
-.hprev{width:100%;max-height:340px;object-fit:contain;border-radius:calc(var(--rl) - 1px);display:none;background:#000;}
+.hprev{width:100%;max-height:510px;object-fit:contain;border-radius:calc(var(--rl) - 1px);display:none;background:#000;}
 .hero.hi .hprev{display:block;}
 .hero.hi .hin{display:none;}
 .hov{position:absolute;inset:0;border-radius:var(--rl);background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;}
@@ -475,7 +475,7 @@ function snap(){
   const v=document.getElementById('cv'),c=document.getElementById('cc2');
   c.width=v.videoWidth||1280;c.height=v.videoHeight||720;
   c.getContext('2d').drawImage(v,0,0);
-  c.toBlob(b=>{closeCam();readImg(b);},'image/jpeg',0.95);
+  c.toBlob(b=>{closeCam();readImg(b);},'image/jpeg',0.97);
 }
 function closeCam(){if(camStream){camStream.getTracks().forEach(t=>t.stop());camStream=null;}document.getElementById('cam').classList.remove('on');}
 
@@ -485,7 +485,7 @@ function onFile(e){const f=e.target.files[0];if(f)readImg(f);e.target.value='';}
 async function readImg(file){
   sw2('cap',document.getElementById('nb-cap'));
   setAI(true,'🔄 กำลังปรับขนาดรูป...');
-  const res=await resizeF(file,2048,0.92);
+  const res=await resizeF(file,3072,0.95);
   if(!res){setAI(false);toast('❌ อ่านไฟล์ไม่ได้');return;}
   curImg=res.b64;
   document.getElementById('hprev').src=res.dataUrl;
@@ -556,11 +556,21 @@ async function callG(b64,prompt){
   const content=[];
   if(b64)content.push({type:'image',source:{type:'base64',media_type:'image/jpeg',data:b64}});
   content.push({type:'text',text:prompt});
-  const r=await fetch(SCRIPT_URL,{method:'POST',redirect:'follow',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'claude',model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content}]})});
+  const r=await fetch(SCRIPT_URL,{method:'POST',redirect:'follow',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'claude',model:'claude-sonnet-4-20250514',max_tokens:1500,messages:[{role:'user',content}]})});
   if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error((e?.error?.message||'HTTP '+r.status).slice(0,100));}
   const d=await r.json();
-  const txt=(d.content?.[0]?.text||'').replace(/```json|```/g,'').trim();
-  try{return JSON.parse(txt);}catch{return {type:'expense',name:'ไม่ทราบ',amount:0,category:'อื่นๆ',note:txt,source:'unknown'};}
+  // ถ้า Apps Script ส่ง error กลับมา
+  if(d.ok===false){throw new Error('Proxy: '+(d.error||'unknown error'));}
+  // ถ้า Anthropic ส่ง error กลับมา
+  if(d.error){throw new Error('Claude: '+d.error.message?.slice(0,80));}
+  const txt=(d.content?.[0]?.text||'').replace(/```json[\s\S]*?```|```/g,'').trim();
+  if(!txt){throw new Error('Claude ไม่ตอบกลับ — เช็ค API Key ใน Script Properties');}
+  try{return JSON.parse(txt);}catch(ex){
+    // Claude ตอบมาแต่ไม่ใช่ JSON บริสุทธิ์ — ลองดึง JSON ออกมา
+    const m=txt.match(/\{[\s\S]*\}|\[[\s\S]*\]/);
+    if(m){try{return JSON.parse(m[0]);}catch{}}
+    throw new Error('Parse ไม่ได้: '+txt.slice(0,100));
+  }
 }
 
 async function sendText(){
@@ -591,23 +601,23 @@ async function analyzeImg(b64){
   try{
     const r=await callG(b64,`คุณคือผู้เชี่ยวชาญอ่านเอกสารการเงินของธุรกิจ SME ไทย วิเคราะห์รูปนี้แล้วตอบ JSON เท่านั้น ห้าม backtick หรือข้อความอื่นนอกจาก JSON
 
-รูปที่อาจพบ:
-- ใบเสร็จร้านค้า / ใบกำกับภาษี (มีตาราง ราคา รวม VAT)
-- กระดาษเขียนมือ เช่น "สินค้า 10x95=950" หรือ "ยอดรวม 3,300"
-- ภาพแชท Line/WhatsApp ที่มีข้อความยอดเงิน เช่น "ยอดรวม 3,300฿ จ้า"
-- ใบเสร็จขนส่ง DHL/Kerry/Flash/ไปรษณีย์
+รูปที่อาจพบและวิธีอ่าน:
+1. สลิปโอนเงินธนาคาร (SCB/กสิกร/กรุงไทย/PromptPay) → หาคำว่า "จำนวนเงิน" หรือ "Amount" แล้วใช้ตัวเลขนั้น ถ้าเป็นการรับโอน = income ถ้าเป็นการโอนออก = expense
+2. ใบเสร็จร้านค้า / ใบกำกับภาษี → หายอด Total / ยอดรวม / ยอดชำระ / Grand Total / ทั้งหมด
+3. กระดาษเขียนมือ เช่น "10x95=950" → คำนวณแล้วใช้ผลลัพธ์ 950
+4. แชท Line/WhatsApp → ดึงตัวเลขยอดรวมที่ระบุในข้อความ
+5. ใบเสร็จขนส่ง DHL/Kerry/Flash → หายอด Total หรือ Payment Received
 
-กฎการหายอดเงิน (สำคัญมาก — ห้ามใส่ 0 ถ้าเห็นตัวเลข):
-1. ใบเสร็จ → หายอด Total / ยอดรวม / ยอดชำระ / Grand Total / Payment Received / ทั้งหมด
-2. กระดาษเขียนมือ → คำนวณเองถ้าเห็นสูตร เช่น 10x95 = 950 ให้ใช้ 950
-3. แชท Line → ดึงตัวเลขที่ระบุว่าเป็นยอดรวม เช่น "ยอดรวม 3,300฿" ให้ใช้ 3300
-4. ถ้ามีหลายยอด ให้เลือกยอดสุดท้ายที่จ่ายจริง
-5. ถ้าเป็นการซื้อสินค้า = expense, ถ้าเป็นการขายสินค้า/รับเงิน = income
+กฎสำคัญ:
+- ห้ามใส่ amount เป็น 0 ถ้าเห็นตัวเลขในรูป
+- สลิปโอนเงิน "จำนวนเงิน 18,900" → amount = 18900
+- ถ้าไม่แน่ใจ income/expense ให้ดูว่า "จ่ายออก" = expense, "รับเข้า" = income
+- ชื่อ name ให้ใช้ชื่อร้าน/ธนาคาร/คู่โอน ไม่ใช่ "ไม่ทราบ"
 
-รูปแบบ JSON (ถ้าหลายรายการส่งเป็น array):
-{"type":"income|expense","name":"ชื่อร้าน หรือรายการสินค้าหลัก","amount":ตัวเลขยอดรวม,"category":"หมวดหมู่","note":"รายละเอียด เช่น จำนวน x ราคา","items":[{"name":"ชื่อสินค้า","qty":1,"price":0}],"source":"receipt|bill|chat|handwritten","raw_text":"ข้อความที่เห็นในรูป"}
+รูปแบบ JSON:
+{"type":"income|expense","name":"ชื่อร้านหรือคู่โอน","amount":ตัวเลข,"category":"หมวดหมู่","note":"รายละเอียด","items":[{"name":"","qty":1,"price":0}],"source":"receipt|slip|bill|chat|handwritten","raw_text":"ข้อความที่เห็น"}
 
-หมวดหมู่: วัตถุดิบ, ค่าขนส่ง, ค่าน้ำไฟ, เงินเดือน, อุปกรณ์, อาหาร, ขายสินค้า, อื่นๆ`);
+หมวดหมู่: วัตถุดิบ, ค่าขนส่ง, ค่าน้ำไฟ, เงินเดือน, อุปกรณ์, อาหาร, โอนเงิน, ขายสินค้า, อื่นๆ`);
     document.getElementById('hero').classList.remove('sc');setAI(false);showCfm(r,b64);
   }catch(e){document.getElementById('hero').classList.remove('sc');setAI(false);toast('❌ '+e.message);}
 }
