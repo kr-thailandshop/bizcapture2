@@ -408,8 +408,7 @@ input[type=file]{display:none;}
 </script>
 <script>
 // ★ แก้เฉพาะ 2 บรรทัดนี้
-const SCRIPT_URL='https://script.google.com/macros/s/AKfycbzDSxB1Hsxjl9cXP6OCJIS8jJaXyoCQSXfjulY0KYstWtvDalVotuidjuX6XqaJlUPCBA/exec';
-const GEMINI_KEY='AIzaSyCTKx-q2i5UIQbnuGyPYIVfiQ5KQxYDitU';
+const SCRIPT_URL='https://script.google.com/macros/s/AKfycbxazsTzDYEdAMec-P8Un2gTPxLL6ia1H2WYXu3OCFKBXVg_cDO69XCnsHlpJyuYy7-cSQ/exec';
 const SHEET_URL='https://docs.google.com/spreadsheets/d/1KtbdZsOn5VlaFhCo0Gg_xh97IR-UbTA6aY9sUyRtbOU/edit';
 
 let recs=JSON.parse(localStorage.getItem('bc_recs')||'[]');
@@ -525,16 +524,15 @@ function submitVoice(){
 }
 function closeVoice(){if(recog){try{recog.stop();}catch(_){}recog=null;}vtxt='';document.getElementById('vs').classList.remove('on');}
 
-// GEMINI
+// CLAUDE (ผ่าน Apps Script Proxy — ไม่มี API Key ใน HTML)
 async function callG(b64,prompt){
-  const url=`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`;
-  const parts=[];
-  if(b64)parts.push({inlineData:{mimeType:'image/jpeg',data:b64}});
-  parts.push({text:prompt});
-  const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts}]})});
+  const content=[];
+  if(b64)content.push({type:'image',source:{type:'base64',media_type:'image/jpeg',data:b64}});
+  content.push({type:'text',text:prompt});
+  const r=await fetch(SCRIPT_URL,{method:'POST',redirect:'follow',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'claude',model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content}]})});
   if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error((e?.error?.message||'HTTP '+r.status).slice(0,100));}
   const d=await r.json();
-  const txt=(d.candidates?.[0]?.content?.parts?.[0]?.text||'').replace(/```json|```/g,'').trim();
+  const txt=(d.content?.[0]?.text||'').replace(/```json|```/g,'').trim();
   try{return JSON.parse(txt);}catch{return {type:'expense',name:'ไม่ทราบ',amount:0,category:'อื่นๆ',note:txt,source:'unknown'};}
 }
 
