@@ -889,52 +889,53 @@ function renderTaxReport(){
 }
 
 function doTaxCSV(){
-  const yr=new Date().getFullYear()+543;
-  const rows=[['ลำดับ','วันที่','ประเภท','ชื่อรายการ','หมวดหมู่','จำนวนเงิน','VAT(7%)','มีหลักฐาน','URL หลักฐาน']];
-  recs.forEach((r,i)=>{
-    const vat=r.type==='inc'?(r.amount*0.07).toFixed(2):'';
+  var yr=new Date().getFullYear()+543;
+  var rows=[['ลำดับ','วันที่','ประเภท','ชื่อรายการ','หมวดหมู่','จำนวนเงิน','VAT(7%)','มีหลักฐาน','URL หลักฐาน']];
+  recs.forEach(function(r,i){
+    var vat=r.type==='inc'?(r.amount*0.07).toFixed(2):'';
     rows.push([i+1,new Date(r.date).toLocaleDateString('th-TH'),r.type==='inc'?'รายรับ':'รายจ่าย',r.name,r.category,r.amount,vat,r.imageUrl?'มี':'ไม่มี',r.imageUrl||'']);
   });
-  // สรุปท้าย
-  const totalInc=recs.filter(r=>r.type==='inc').reduce((s,r)=>s+r.amount,0);
-  const totalExp=recs.filter(r=>r.type==='exp').reduce((s,r)=>s+r.amount,0);
+  var totalInc=recs.filter(function(r){return r.type==='inc';}).reduce(function(s,r){return s+r.amount;},0);
+  var totalExp=recs.filter(function(r){return r.type==='exp';}).reduce(function(s,r){return s+r.amount;},0);
   rows.push([]);
   rows.push(['','','','','รายได้รวม',totalInc,'','','']);
   rows.push(['','','','','ค่าใช้จ่ายรวม',totalExp,'','','']);
   rows.push(['','','','','กำไรสุทธิ',totalInc-totalExp,'','','']);
-  const a=document.createElement('a');
-  a.href='data:text/csv;charset=utf-8,﻿'+encodeURIComponent(rows.map(r=>r.map(v=>`"${String(v||'').replace(/"/g,'""')}"`).join(',')).join('
-'));
-  a.download=`tax_report_${yr}_${new Date().toISOString().split('T')[0]}.csv`;
+  var csv=rows.map(function(r){return r.map(function(v){return '"'+String(v||'').replace(/"/g,'""')+'"';}).join(',');}).join('\n');
+  var a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,\ufeff'+encodeURIComponent(csv);
+  a.download='tax_report_'+yr+'_'+new Date().toISOString().split('T')[0]+'.csv';
   a.click();toast('✅ Export รายงานภาษีสำเร็จ');
 }
 
 function doTaxText(){
-  const yr=new Date().getFullYear()+543;
-  const totalInc=recs.filter(r=>r.type==='inc').reduce((s,r)=>s+r.amount,0);
-  const totalExp=recs.filter(r=>r.type==='exp').reduce((s,r)=>s+r.amount,0);
-  const expCat={};
-  recs.filter(r=>r.type==='exp').forEach(r=>expCat[r.category]=(expCat[r.category]||0)+r.amount);
-  const txt=`รายงานภาษีปี พ.ศ.${yr}
-ธุรกิจ: ${cfg.bizName}
-================
-รายได้รวม: ฿${fmt(totalInc)}
-VAT ขาออก (7%): ฿${fmt(totalInc*0.07)}
-ค่าใช้จ่ายรวม: ฿${fmt(totalExp)}
-กำไรสุทธิ: ฿${fmt(totalInc-totalExp)}
-================
-ค่าใช้จ่ายแยกหมวด:
-${Object.entries(expCat).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`- ${k}: ฿${fmt(v)}`).join('
-')}
-================
-จำนวนใบเสร็จ/หลักฐาน: ${recs.filter(r=>r.imageUrl).length} รายการ
-ส่งออกเมื่อ: ${new Date().toLocaleString('th-TH')}`;
-  navigator.clipboard?.writeText(txt).then(()=>toast('✅ คัดลอกสรุปภาษีแล้ว')).catch(()=>{
-    const a=document.createElement('a');
-    a.href='data:text/plain;charset=utf-8,'+encodeURIComponent(txt);
-    a.download=`tax_summary_${yr}.txt`;a.click();
-    toast('✅ บันทึกสรุปภาษีแล้ว');
-  });
+  var yr=new Date().getFullYear()+543;
+  var totalInc=recs.filter(function(r){return r.type==='inc';}).reduce(function(s,r){return s+r.amount;},0);
+  var totalExp=recs.filter(function(r){return r.type==='exp';}).reduce(function(s,r){return s+r.amount;},0);
+  var expCat={};
+  recs.filter(function(r){return r.type==='exp';}).forEach(function(r){expCat[r.category]=(expCat[r.category]||0)+r.amount;});
+  var catLines=Object.entries(expCat).sort(function(a,b){return b[1]-a[1];}).map(function(e){return '- '+e[0]+': ฿'+fmt(e[1]);}).join('\n');
+  var txt='รายงานภาษีปี พ.ศ.'+yr+'\n'
+    +'ธุรกิจ: '+cfg.bizName+'\n'
+    +'================\n'
+    +'รายได้รวม: ฿'+fmt(totalInc)+'\n'
+    +'VAT ขาออก (7%): ฿'+fmt(totalInc*0.07)+'\n'
+    +'ค่าใช้จ่ายรวม: ฿'+fmt(totalExp)+'\n'
+    +'กำไรสุทธิ: ฿'+fmt(totalInc-totalExp)+'\n'
+    +'================\n'
+    +'ค่าใช้จ่ายแยกหมวด:\n'+catLines+'\n'
+    +'================\n'
+    +'จำนวนใบเสร็จ/หลักฐาน: '+recs.filter(function(r){return r.imageUrl;}).length+' รายการ\n'
+    +'ส่งออกเมื่อ: '+new Date().toLocaleString('th-TH');
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(function(){toast('✅ คัดลอกสรุปภาษีแล้ว');}).catch(function(){saveTxt(txt,yr);});
+  }else{saveTxt(txt,yr);}
+}
+function saveTxt(txt,yr){
+  var a=document.createElement('a');
+  a.href='data:text/plain;charset=utf-8,'+encodeURIComponent(txt);
+  a.download='tax_summary_'+yr+'.txt';a.click();
+  toast('✅ บันทึกสรุปภาษีแล้ว');
 }
 
 async function genReport(){
