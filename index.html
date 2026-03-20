@@ -474,7 +474,7 @@ const SCRIPT_URL='https://script.google.com/macros/s/AKfycbzUgmC5mGcTcdnZLB9iCx5
 const SHEET_URL='https://docs.google.com/spreadsheets/d/1KtbdZsOn5VlaFhCo0Gg_xh97IR-UbTA6aY9sUyRtbOU/edit';
 
 let recs=JSON.parse(localStorage.getItem('bc_recs')||'[]');
-let cfg=JSON.parse(localStorage.getItem('bc_cfg')||'null')||{bizName:'ธุรกิจของฉัน',incomeCategories:['ขายสินค้า','บริการ','อื่นๆ'],expenseCategories:['วัตถุดิบ','ค่าขนส่ง','ค่าน้ำไฟ','เงินเดือน','อื่นๆ']};
+let cfg=JSON.parse(localStorage.getItem('bc_cfg')||'null')||{bizName:'ธุรกิจของฉัน',incomeCategories:['ขายสินค้า Beauty','ขายเสื้อผ้า','ขายส่ง','บริการ','อื่นๆ'],expenseCategories:['วัตถุดิบ/สินค้า','ค่าขนส่ง','ค่าแพ็คของ','ค่าโฆษณา','ค่าน้ำไฟ','เงินเดือน','อื่นๆ']};
 let fil='all',pend=null,curImg=null,camStream=null,recog=null,vtxt='',detId=null;
 
 (async function boot(){
@@ -657,7 +657,10 @@ async function sendText(){
   const txt=document.getElementById('ta').value.trim();if(!txt)return;
   setAI(true,'AI กำลังอ่านข้อความ...');
   try{
-    const r=await callG(null,`คุณคือผู้ช่วยบันทึกบัญชี SME ไทย สกัดรายการจากข้อความพูด/พิมพ์ ตอบ JSON เท่านั้น ห้าม backtick
+    const r=await callG(null,`คุณคือผู้ช่วยบันทึกบัญชี SME ไทย
+ข้อมูลธุรกิจ: ขาย Beauty Products และเสื้อผ้าแฟชั่น
+หมวดที่ใช้บ่อย: วัตถุดิบ(ซื้อสินค้า), ค่าขนส่ง, ค่าโฆษณา, ขายสินค้า(รายรับ)
+สกัดรายการจากข้อความพูด/พิมพ์ ตอบ JSON เท่านั้น ห้าม backtick
 
 กฎ:
 - ถ้าเป็นการซื้อ/จ่ายเงิน/ค่าใช้จ่าย → type=expense
@@ -679,7 +682,10 @@ async function analyzeImg(b64){
   document.getElementById('hero').classList.add('sc');
   setAI(true,'🤖 AI กำลังอ่านรูปภาพ...');
   try{
-    const r=await callG(b64,`คุณคือผู้เชี่ยวชาญอ่านเอกสารการเงินของธุรกิจ SME ไทย วิเคราะห์รูปนี้แล้วตอบ JSON เท่านั้น ห้าม backtick หรือข้อความอื่นนอกจาก JSON
+    const r=await callG(b64,`คุณคือผู้เชี่ยวชาญอ่านเอกสารการเงินของธุรกิจ SME ไทย
+ข้อมูลธุรกิจ: ขาย Beauty Products (ครีม, เซรั่ม, สกินแคร์, เครื่องสำอาง, ผลิตภัณฑ์ความงาม) และเสื้อผ้าแฟชั่น ซื้อสินค้าจากซัพพลายเออร์ไทยและส่งออกต่างประเทศ
+หมวดหมู่ที่ใช้บ่อย: วัตถุดิบ=ซื้อสินค้า Beauty/เสื้อผ้า, ค่าขนส่ง=DHL/Kerry/ไปรษณีย์, ขายสินค้า=รายรับจากลูกค้า
+วิเคราะห์รูปนี้แล้วตอบ JSON เท่านั้น ห้าม backtick หรือข้อความอื่นนอกจาก JSON
 
 รูปที่อาจพบและวิธีอ่าน:
 1. สลิปโอนเงินธนาคาร (SCB/กสิกร/กรุงไทย/PromptPay) → หาคำว่า "จำนวนเงิน" หรือ "Amount" แล้วใช้ตัวเลขนั้น ถ้าเป็นการรับโอน = income ถ้าเป็นการโอนออก = expense
@@ -699,7 +705,7 @@ async function analyzeImg(b64){
 รูปแบบ JSON:
 {"type":"income|expense","name":"ชื่อร้านหรือคู่โอน","amount":ตัวเลข,"category":"หมวดหมู่","note":"รายละเอียด","items":[{"name":"","qty":1,"price":0}],"source":"receipt|slip|bill|chat|handwritten","raw_text":"ข้อความที่เห็น"}
 
-หมวดหมู่: วัตถุดิบ, ค่าขนส่ง, ค่าน้ำไฟ, เงินเดือน, อุปกรณ์, อาหาร, โอนเงิน, ขายสินค้า, อื่นๆ`);
+หมวดหมู่รายจ่าย: วัตถุดิบ/สินค้า, ค่าขนส่ง, ค่าแพ็คของ, ค่าโฆษณา, ค่าน้ำไฟ, เงินเดือน, อื่นๆ | หมวดหมู่รายรับ: ขายสินค้า Beauty, ขายเสื้อผ้า, ขายส่ง, อื่นๆ`);
     document.getElementById('hero').classList.remove('sc');setAI(false);showCfm(r,b64);
   }catch(e){document.getElementById('hero').classList.remove('sc');setAI(false);toast('❌ '+e.message);}
 }
