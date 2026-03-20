@@ -174,6 +174,16 @@ body{font-family:'Noto Sans Thai',sans-serif;background:var(--bg);color:var(--t1
 .rbtn:disabled{opacity:.4;}
 .exrow{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
 .exbtn{padding:12px;border:1.5px solid var(--gb);border-radius:var(--rs);background:var(--glass);color:var(--t2);font-family:'Noto Sans Thai',sans-serif;font-size:.8rem;font-weight:700;cursor:pointer;}
+/* EDIT FIELDS */
+.cfedit{display:flex;flex-direction:column;gap:8px;padding:10px 16px;border-bottom:1px solid var(--gb);}
+.cferow{display:flex;align-items:center;gap:10px;}
+.cfelbl{font-size:.72rem;color:var(--t2);width:52px;flex-shrink:0;}
+.cfeinp{flex:1;background:rgba(255,255,255,.06);border:1.5px solid var(--gb);border-radius:var(--rs);padding:8px 12px;color:var(--t1);font-family:'Noto Sans Thai',sans-serif;font-size:.88rem;}
+.cfeinp:focus{outline:none;border-color:var(--acc);}
+.cfetype{display:flex;gap:6px;}
+.cfetbtn{flex:1;padding:7px;border-radius:8px;border:1.5px solid var(--gb);background:transparent;color:var(--t2);font-family:'Noto Sans Thai',sans-serif;font-size:.78rem;font-weight:700;cursor:pointer;}
+.cfetbtn.inc.on{background:var(--ig);border-color:var(--inc);color:var(--inc);}
+.cfetbtn.exp.on{background:var(--eg);border-color:var(--exp);color:var(--exp);}
 /* CHART */
 .chartbar{display:flex;align-items:flex-end;gap:4px;height:120px;padding:0 4px;}
 .cbmonth{display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;min-width:0;}
@@ -316,15 +326,32 @@ input[type=file]{display:none;}
       </div>
       <div class="cfm" id="cfm">
         <div class="cfh">
-          <span class="cfp" id="cfp">&#x0E23;&#x0E32;&#x0E22;&#x0E08;&#x0E48;&#x0E32;&#x0E22;</span>
-          <span class="cfn" id="cfn">&#x2014;</span>
-          <span class="cfa" id="cfa">&#x0E3F;0</span>
+          <span class="cfp" id="cfp">รายจ่าย</span>
+          <span class="cfn" id="cfn">—</span>
+          <span class="cfa" id="cfa">฿0</span>
         </div>
-        <div class="cfcr"><span class="cfcl">&#x0E2B;&#x0E21;&#x0E27;&#x0E14;&#x0E2B;&#x0E21;&#x0E39;&#x0E48;:</span><select class="cfcs" id="cfcat"></select></div>
+        <div class="cfedit">
+          <div class="cferow">
+            <span class="cfelbl">ประเภท</span>
+            <div class="cfetype">
+              <button class="cfetbtn inc" id="cfebtn_inc" onclick="setCfType('inc')">+ รายรับ</button>
+              <button class="cfetbtn exp on" id="cfebtn_exp" onclick="setCfType('exp')">- รายจ่าย</button>
+            </div>
+          </div>
+          <div class="cferow">
+            <span class="cfelbl">ชื่อ</span>
+            <input class="cfeinp" id="cfename" type="text" placeholder="ชื่อรายการ">
+          </div>
+          <div class="cferow">
+            <span class="cfelbl">ยอด (฿)</span>
+            <input class="cfeinp" id="cfeamt" type="number" placeholder="0.00" inputmode="decimal">
+          </div>
+        </div>
+        <div class="cfcr"><span class="cfcl">หมวดหมู่:</span><select class="cfcs" id="cfcat"></select></div>
         <div class="cfb" id="cfb"></div>
         <div class="cfac">
-          <button class="cfbtn cl" onclick="dismissConfirm()">&#x2715; &#x0E22;&#x0E01;&#x0E40;&#x0E25;&#x0E34;&#x0E01;</button>
-          <button class="cfbtn sv" onclick="saveRecord()">&#x2713; &#x0E1A;&#x0E31;&#x0E19;&#x0E17;&#x0E36;&#x0E01; + Sync</button>
+          <button class="cfbtn cl" onclick="dismissConfirm()">✕ ยกเลิก</button>
+          <button class="cfbtn sv" onclick="saveRecord()">✓ บันทึก + Sync</button>
         </div>
       </div>
     </div>
@@ -678,6 +705,16 @@ async function analyzeImg(b64){
 }
 
 // CONFIRM
+function setCfType(t){
+  pend.entries[0].type=t;
+  const ip=document.getElementById('cfebtn_inc'),ep=document.getElementById('cfebtn_exp');
+  const cfp=document.getElementById('cfp');
+  ip.className='cfetbtn inc'+(t==='inc'?' on':'');
+  ep.className='cfetbtn exp'+(t==='exp'?' on':'');
+  cfp.className='cfp '+(t==='inc'?'i':'e');
+  cfp.textContent=t==='inc'?'+ รายรับ':'- รายจ่าย';
+  document.getElementById('cfa').className='cfa '+(t==='inc'?'i':'e');
+}
 function showCfm(data,b64){
   const entries=Array.isArray(data)?data:[data],m=entries[0];
   pend={entries,imgB64:b64||curImg};
@@ -703,6 +740,14 @@ function dismissConfirm(){document.getElementById('cfm').classList.remove('on');
 // SAVE + UPLOAD + SYNC
 async function saveRecord(){
   if(!pend)return;
+  // อัปเดตจาก edit fields ก่อนบันทึก
+  const ename=document.getElementById('cfename').value.trim();
+  const eamt=parseFloat(document.getElementById('cfeamt').value)||0;
+  if(ename)pend.entries[0].name=ename;
+  if(eamt>0)pend.entries[0].amount=eamt;
+  // อัปเดต display
+  document.getElementById('cfn').textContent=pend.entries[0].name;
+  document.getElementById('cfa').textContent='฿'+fmt(pend.entries[0].amount);
   const {entries,imgB64}=pend,cat=document.getElementById('cfcat').value,now=new Date().toISOString();
   let imageUrl='';
   if(imgB64){
