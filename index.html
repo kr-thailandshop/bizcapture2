@@ -174,6 +174,23 @@ body{font-family:'Noto Sans Thai',sans-serif;background:var(--bg);color:var(--t1
 .rbtn:disabled{opacity:.4;}
 .exrow{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
 .exbtn{padding:12px;border:1.5px solid var(--gb);border-radius:var(--rs);background:var(--glass);color:var(--t2);font-family:'Noto Sans Thai',sans-serif;font-size:.8rem;font-weight:700;cursor:pointer;}
+/* CHART */
+.chartbar{display:flex;align-items:flex-end;gap:4px;height:120px;padding:0 4px;}
+.cbmonth{display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;min-width:0;}
+.cbwrap{display:flex;align-items:flex-end;gap:2px;width:100%;height:90px;}
+.cbi{border-radius:3px 3px 0 0;width:50%;transition:height .6s;}
+.cbi.inc{background:var(--inc);}
+.cbi.exp{background:var(--exp);}
+.cblbl{font-size:.55rem;color:var(--t3);font-family:'JetBrains Mono',monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;text-align:center;}
+.chartleg{display:flex;gap:14px;justify-content:center;margin-top:10px;}
+.cleg{display:flex;align-items:center;gap:5px;font-size:.72rem;color:var(--t2);}
+.clegdot{width:8px;height:8px;border-radius:2px;}
+/* TAX */
+.taxrow{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--gb);font-size:.82rem;}
+.taxrow:last-child{border-bottom:none;}
+.taxlbl{color:var(--t2);}
+.taxval{font-family:'JetBrains Mono',monospace;font-weight:700;}
+.taxsec{font-size:.68rem;color:var(--t3);text-transform:uppercase;letter-spacing:1px;margin:12px 0 6px;font-weight:700;}
 /* NAV */
 .bnav{position:fixed;bottom:0;left:0;right:0;background:rgba(8,13,26,.85);border-top:1px solid var(--gb);backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);display:flex;padding-bottom:var(--safe-b);z-index:50;}
 .nb{flex:1;padding:10px 8px 8px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;background:none;border:none;color:var(--t3);font-family:'Noto Sans Thai',sans-serif;font-size:.71rem;font-weight:700;position:relative;}
@@ -328,10 +345,28 @@ input[type=file]{display:none;}
       <div class="rcard"><div class="rclbl">&#x0E2A;&#x0E23;&#x0E38;&#x0E1B;&#x0E01;&#x0E32;&#x0E23;&#x0E40;&#x0E07;&#x0E34;&#x0E19;</div><div class="sgrid" id="sg"></div></div>
       <div class="rcard"><div class="rclbl">&#x0E23;&#x0E32;&#x0E22;&#x0E08;&#x0E48;&#x0E32;&#x0E22;&#x0E15;&#x0E32;&#x0E21;&#x0E2B;&#x0E21;&#x0E27;&#x0E14;</div><div id="cc"></div></div>
       <div class="rcard"><div class="rclbl">&#x0E27;&#x0E34;&#x0E40;&#x0E04;&#x0E23;&#x0E32;&#x0E30;&#x0E2B;&#x0E4C;&#x0E18;&#x0E38;&#x0E23;&#x0E01;&#x0E34;&#x0E08;&#x0E42;&#x0E14;&#x0E22; AI</div><div class="aib" style="display:block;max-height:200px" id="aiins">&#x2014; &#x0E01;&#x0E14;&#x0E1B;&#x0E38;&#x0E48;&#x0E21;&#x0E14;&#x0E49;&#x0E32;&#x0E19;&#x0E25;&#x0E48;&#x0E32;&#x0E07;&#x0E40;&#x0E1E;&#x0E37;&#x0E48;&#x0E2D;&#x0E27;&#x0E34;&#x0E40;&#x0E04;&#x0E23;&#x0E32;&#x0E30;&#x0E2B;&#x0E4C; &#x2014;</div></div>
-      <button class="rbtn" id="rb" onclick="genReport()">&#x1F916; &#x0E27;&#x0E34;&#x0E40;&#x0E04;&#x0E23;&#x0E32;&#x0E30;&#x0E2B;&#x0E4C;&#x0E18;&#x0E38;&#x0E23;&#x0E01;&#x0E34;&#x0E08;</button>
+      <!-- กราฟรายเดือน -->
+      <div class="rcard">
+        <div class="rclbl">📊 รายรับ-รายจ่ายรายเดือน</div>
+        <div class="chartbar" id="monthchart"></div>
+        <div class="chartleg">
+          <div class="cleg"><div class="clegdot" style="background:var(--inc)"></div>รายรับ</div>
+          <div class="cleg"><div class="clegdot" style="background:var(--exp)"></div>รายจ่าย</div>
+        </div>
+      </div>
+      <!-- รายงานภาษี -->
+      <div class="rcard">
+        <div class="rclbl">🧾 รายงานภาษีสรรพากร</div>
+        <div id="taxreport"></div>
+        <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <button class="exbtn" onclick="doTaxCSV()" style="background:rgba(0,229,160,.1);border-color:var(--ig);color:var(--inc)">📄 Export ภาษี CSV</button>
+          <button class="exbtn" onclick="doTaxText()" style="background:rgba(79,141,255,.1);border-color:var(--ag);color:var(--acc)">📋 สรุปข้อความ</button>
+        </div>
+      </div>
+      <button class="rbtn" id="rb" onclick="genReport()">🤖 วิเคราะห์ธุรกิจ</button>
       <div class="exrow">
-        <button class="exbtn" onclick="doCSV()">&#x1F4CA; Export CSV</button>
-        <button class="exbtn" onclick="openSheet()">&#x1F4CB; Google Sheets</button>
+        <button class="exbtn" onclick="doCSV()">📊 Export CSV</button>
+        <button class="exbtn" onclick="openSheet()">📋 Google Sheets</button>
       </div>
     </div>
   </div>
@@ -613,6 +648,8 @@ async function analyzeImg(b64){
 - สลิปโอนเงิน "จำนวนเงิน 18,900" → amount = 18900
 - ถ้าไม่แน่ใจ income/expense ให้ดูว่า "จ่ายออก" = expense, "รับเข้า" = income
 - ชื่อ name ให้ใช้ชื่อร้าน/ธนาคาร/คู่โอน ไม่ใช่ "ไม่ทราบ"
+- บิลคาร์บอน/ใบเสร็จสะดวกซื้อ: คำว่า "Total" อาจเป็นราคาสินค้าชิ้นสุดท้าย ไม่ใช่ยอดรวม ให้ดู CASH/เงินสด - Change/เงินทอน = ยอดจริง เช่น CASH=85, Change=4 → ยอดจริง=81
+- ถ้าเห็นทั้ง Total และ CASH/Change ให้คำนวณ CASH - Change ก่อนเสมอ
 
 รูปแบบ JSON:
 {"type":"income|expense","name":"ชื่อร้านหรือคู่โอน","amount":ตัวเลข,"category":"หมวดหมู่","note":"รายละเอียด","items":[{"name":"","qty":1,"price":0}],"source":"receipt|slip|bill|chat|handwritten","raw_text":"ข้อความที่เห็น"}
@@ -756,6 +793,8 @@ async function doDelete(){
 
 // REPORT
 function renderReport(){
+  renderMonthChart();
+  renderTaxReport();
   const inc=recs.filter(r=>r.type==='inc').reduce((s,r)=>s+r.amount,0);
   const exp=recs.filter(r=>r.type==='exp').reduce((s,r)=>s+r.amount,0);
   const syn=recs.filter(r=>r.synced).length,wi=recs.filter(r=>r.imageUrl).length;
@@ -773,6 +812,111 @@ function renderReport(){
   document.getElementById('cc').innerHTML=Object.entries(cm).sort((a,b)=>b[1]-a[1]).slice(0,6)
     .map(([k,v],i)=>`<div class="crow"><div class="cn">${k}</div><div class="ct"><div class="cf2" style="width:${(v/mx*100).toFixed(1)}%;background:${clr[i%clr.length]}"></div></div><div class="ca">฿${fmtK(v)}</div></div>`).join('')
     ||'<div style="color:var(--t3);font-size:.82rem">ยังไม่มีข้อมูลรายจ่าย</div>';
+}
+
+// MONTHLY CHART
+function renderMonthChart(){
+  const months={};
+  recs.forEach(r=>{
+    const d=new Date(r.date);
+    const k=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+    if(!months[k])months[k]={inc:0,exp:0};
+    if(r.type==='inc')months[k].inc+=r.amount;
+    else months[k].exp+=r.amount;
+  });
+  const keys=Object.keys(months).sort().slice(-6);
+  if(!keys.length){document.getElementById('monthchart').innerHTML='<div style="color:var(--t3);font-size:.8rem;padding:20px;text-align:center">ยังไม่มีข้อมูล</div>';return;}
+  const maxVal=Math.max(...keys.map(k=>Math.max(months[k].inc,months[k].exp)),1);
+  const thNames=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+  document.getElementById('monthchart').innerHTML=keys.map(k=>{
+    const [y,m]=k.split('-');
+    const ih=Math.round((months[k].inc/maxVal)*85);
+    const eh=Math.round((months[k].exp/maxVal)*85);
+    return `<div class="cbmonth">
+      <div class="cbwrap">
+        <div class="cbi inc" style="height:${ih}px" title="รายรับ ฿${fmtK(months[k].inc)}"></div>
+        <div class="cbi exp" style="height:${eh}px" title="รายจ่าย ฿${fmtK(months[k].exp)}"></div>
+      </div>
+      <div class="cblbl">${thNames[parseInt(m)-1]}</div>
+    </div>`;
+  }).join('');
+}
+
+// TAX REPORT
+function renderTaxReport(){
+  const yr=new Date().getFullYear()+543;
+  const inc=recs.filter(r=>r.type==='inc');
+  const exp=recs.filter(r=>r.type==='exp');
+  const totalInc=inc.reduce((s,r)=>s+r.amount,0);
+  const totalExp=exp.reduce((s,r)=>s+r.amount,0);
+  const profit=totalInc-totalExp;
+  const vat=totalInc*0.07;
+
+  // จัดกลุ่มรายจ่ายตามหมวด
+  const expCat={};
+  exp.forEach(r=>expCat[r.category]=(expCat[r.category]||0)+r.amount);
+
+  document.getElementById('taxreport').innerHTML=`
+    <div class="taxsec">ข้อมูลสำหรับยื่นภ.พ.30 / ภ.ง.ด.94</div>
+    <div class="taxrow"><span class="taxlbl">ปีภาษี (พ.ศ.)</span><span class="taxval">${yr}</span></div>
+    <div class="taxrow"><span class="taxlbl">รายได้รวม</span><span class="taxval" style="color:var(--inc)">฿${fmt(totalInc)}</span></div>
+    <div class="taxrow"><span class="taxlbl">VAT ขาออก (7%)</span><span class="taxval" style="color:var(--inc)">฿${fmt(vat)}</span></div>
+    <div class="taxrow"><span class="taxlbl">ค่าใช้จ่ายรวม</span><span class="taxval" style="color:var(--exp)">฿${fmt(totalExp)}</span></div>
+    <div class="taxrow"><span class="taxlbl">กำไรสุทธิ</span><span class="taxval" style="color:${profit>=0?'var(--inc)':'var(--exp)'}">฿${fmt(profit)}</span></div>
+    <div class="taxrow"><span class="taxlbl">จำนวนใบเสร็จ/หลักฐาน</span><span class="taxval">${recs.filter(r=>r.imageUrl).length} รายการ</span></div>
+    <div class="taxsec">ค่าใช้จ่ายแยกหมวด</div>
+    ${Object.entries(expCat).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`
+    <div class="taxrow"><span class="taxlbl">${k}</span><span class="taxval">฿${fmt(v)}</span></div>`).join('')}
+  `;
+}
+
+function doTaxCSV(){
+  const yr=new Date().getFullYear()+543;
+  const rows=[['ลำดับ','วันที่','ประเภท','ชื่อรายการ','หมวดหมู่','จำนวนเงิน','VAT(7%)','มีหลักฐาน','URL หลักฐาน']];
+  recs.forEach((r,i)=>{
+    const vat=r.type==='inc'?(r.amount*0.07).toFixed(2):'';
+    rows.push([i+1,new Date(r.date).toLocaleDateString('th-TH'),r.type==='inc'?'รายรับ':'รายจ่าย',r.name,r.category,r.amount,vat,r.imageUrl?'มี':'ไม่มี',r.imageUrl||'']);
+  });
+  // สรุปท้าย
+  const totalInc=recs.filter(r=>r.type==='inc').reduce((s,r)=>s+r.amount,0);
+  const totalExp=recs.filter(r=>r.type==='exp').reduce((s,r)=>s+r.amount,0);
+  rows.push([]);
+  rows.push(['','','','','รายได้รวม',totalInc,'','','']);
+  rows.push(['','','','','ค่าใช้จ่ายรวม',totalExp,'','','']);
+  rows.push(['','','','','กำไรสุทธิ',totalInc-totalExp,'','','']);
+  const a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,﻿'+encodeURIComponent(rows.map(r=>r.map(v=>`"${String(v||'').replace(/"/g,'""')}"`).join(',')).join('
+'));
+  a.download=`tax_report_${yr}_${new Date().toISOString().split('T')[0]}.csv`;
+  a.click();toast('✅ Export รายงานภาษีสำเร็จ');
+}
+
+function doTaxText(){
+  const yr=new Date().getFullYear()+543;
+  const totalInc=recs.filter(r=>r.type==='inc').reduce((s,r)=>s+r.amount,0);
+  const totalExp=recs.filter(r=>r.type==='exp').reduce((s,r)=>s+r.amount,0);
+  const expCat={};
+  recs.filter(r=>r.type==='exp').forEach(r=>expCat[r.category]=(expCat[r.category]||0)+r.amount);
+  const txt=`รายงานภาษีปี พ.ศ.${yr}
+ธุรกิจ: ${cfg.bizName}
+================
+รายได้รวม: ฿${fmt(totalInc)}
+VAT ขาออก (7%): ฿${fmt(totalInc*0.07)}
+ค่าใช้จ่ายรวม: ฿${fmt(totalExp)}
+กำไรสุทธิ: ฿${fmt(totalInc-totalExp)}
+================
+ค่าใช้จ่ายแยกหมวด:
+${Object.entries(expCat).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`- ${k}: ฿${fmt(v)}`).join('
+')}
+================
+จำนวนใบเสร็จ/หลักฐาน: ${recs.filter(r=>r.imageUrl).length} รายการ
+ส่งออกเมื่อ: ${new Date().toLocaleString('th-TH')}`;
+  navigator.clipboard?.writeText(txt).then(()=>toast('✅ คัดลอกสรุปภาษีแล้ว')).catch(()=>{
+    const a=document.createElement('a');
+    a.href='data:text/plain;charset=utf-8,'+encodeURIComponent(txt);
+    a.download=`tax_summary_${yr}.txt`;a.click();
+    toast('✅ บันทึกสรุปภาษีแล้ว');
+  });
 }
 
 async function genReport(){
