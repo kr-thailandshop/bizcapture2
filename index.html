@@ -402,13 +402,13 @@ input[type=file]{display:none;}
 <input type="file" id="ci2" accept="image/*" capture="environment" onchange="onFile(event)">
 <script>
 (function(){
-  const m={name:'BizCapture',short_name:'BizCapture',start_url:'./',display:'standalone',background_color:'#080d1a',theme_color:'#080d1a',orientation:'portrait',icons:[{src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%232563eb'/%3E%3Ctext y='.85em' font-size='380' x='60'%3E%F0%9F%92%BC%3C/text%3E%3C/svg%3E",sizes:'512x512',type:'image/svg+xml',purpose:'any maskable'}]};
+  const m={name:'BizCapture',short_name:'BizCapture',start_url:'./',display:'standalone',background_color:'#080d1a',theme_color:'#080d1a',orientation:'portrait',share_target:{action:'./',method:'POST',enctype:'multipart/form-data',params:{title:'title',text:'text',url:'url',files:[{name:'file',accept:['image/*']}]}},icons:[{src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%232563eb'/%3E%3Ctext y='.85em' font-size='380' x='60'%3E%F0%9F%92%BC%3C/text%3E%3C/svg%3E",sizes:'512x512',type:'image/svg+xml',purpose:'any maskable'}]};
   try{const b=new Blob([JSON.stringify(m)],{type:'application/json'});document.getElementById('manifestLink').href=URL.createObjectURL(b);}catch(e){}
 })();
 </script>
 <script>
 // ★ แก้เฉพาะ 2 บรรทัดนี้
-const SCRIPT_URL='https://script.google.com/macros/s/AKfycbyUzd3V_wmF1_05BXBP62Pcsw7dXiAlqzRGnHUrtk6eQvtslXE69_Xvmr_XtqgQ04vb8A/exec';
+const SCRIPT_URL='https://script.google.com/macros/s/AKfycbzEmyyAZ9WrvdXDEdUST2SjcnkIpbtUtV8UPIRnnCINMsgqcHe0mN5ylIqV0fqgmjcRMg/exec';
 const SHEET_URL='https://docs.google.com/spreadsheets/d/1KtbdZsOn5VlaFhCo0Gg_xh97IR-UbTA6aY9sUyRtbOU/edit';
 
 let recs=JSON.parse(localStorage.getItem('bc_recs')||'[]');
@@ -427,9 +427,36 @@ let fil='all',pend=null,curImg=null,camStream=null,recog=null,vtxt='',detId=null
   document.addEventListener('drop',e=>{e.preventDefault();const f=e.dataTransfer.files[0];if(f?.type.startsWith('image/'))readImg(f);});
   document.addEventListener('paste',e=>{for(const it of e.clipboardData.items)if(it.type.startsWith('image/')){e.preventDefault();readImg(it.getAsFile());return;}});
   document.getElementById('ta')?.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendText();}});
+  // ตรวจสอบ clipboard รูปภาพอัตโนมัติเมื่อกลับมาที่แอป
+  document.addEventListener('visibilitychange',async()=>{
+    if(document.visibilityState==='visible'&&!curImg){
+      try{
+        const its=await navigator.clipboard.read();
+        for(const it of its)for(const t of it.types){
+          if(t.startsWith('image/')){
+            const f=await it.getType(t);
+            toast('📋 พบรูปใน clipboard — กำลังโหลด...');
+            readImg(f);return;
+          }
+        }
+      }catch(_){}
+    }
+  });
+  // รับรูปจาก Web Share (แชร์รูปจากแอปอื่นเข้ามา)
+  if(navigator.serviceWorker){
+    navigator.serviceWorker.addEventListener('message',e=>{
+      if(e.data?.type==='share-image'&&e.data.blob){readImg(e.data.blob);}
+      if(e.data?.type==='share-text'&&e.data.text){document.getElementById('ta').value=e.data.text;sendText();}
+    });
+  }
 })();
 
 function lmsg(m){document.getElementById('lmsg').textContent=m;}
+
+// Register Service Worker สำหรับ Web Share Target
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('./sw.js').catch(()=>{});
+}
 function sl(ms){return new Promise(r=>setTimeout(r,ms));}
 
 async function post(body){
@@ -540,7 +567,20 @@ async function sendText(){
   const txt=document.getElementById('ta').value.trim();if(!txt)return;
   setAI(true,'AI กำลังอ่านข้อความ...');
   try{
-    const r=await callG(null,`สกัดรายการรายรับ/รายจ่ายจากข้อความ ตอบ JSON เท่านั้น ห้าม backtick\nถ้าหลายรายการส่ง array ถ้าเดียวส่ง object\n{"type":"income|expense","name":"ชื่อ","amount":ตัวเลข,"category":"หมวด","note":"","items":[{"name":"","qty":1,"price":0}],"source":"text"}\nข้อความ: ${txt}`);
+    const r=await callG(null,`คุณคือผู้ช่วยบันทึกบัญชี SME ไทย สกัดรายการจากข้อความพูด/พิมพ์ ตอบ JSON เท่านั้น ห้าม backtick
+
+กฎ:
+- ถ้าเป็นการซื้อ/จ่ายเงิน/ค่าใช้จ่าย → type=expense
+- ถ้าเป็นการขาย/รับเงิน/ยอดขาย → type=income  
+- ถ้าข้อความมีหลายรายการ → ส่งเป็น array
+- ถ้ามีสูตรเช่น 10x95 ให้คำนวณ = 950
+- ถ้าไม่บอกประเภท ให้เดาจากบริบท เช่น "น้ำมัน" = expense, "ขายของ" = income
+- amount ต้องเป็นตัวเลขเท่านั้น ห้ามใส่ 0 ถ้ามีตัวเลขในข้อความ
+
+JSON: {"type":"income|expense","name":"ชื่อรายการ","amount":ตัวเลข,"category":"หมวด","note":"","items":[{"name":"","qty":1,"price":0}],"source":"text"}
+หมวด: วัตถุดิบ, ค่าขนส่ง, ค่าน้ำไฟ, เงินเดือน, อุปกรณ์, ขายสินค้า, อาหาร, อื่นๆ
+
+ข้อความ: ${txt}`);
     setAI(false);showCfm(r,null);document.getElementById('ta').value='';
   }catch(e){setAI(false);toast('❌ '+e.message);}
 }
@@ -549,7 +589,25 @@ async function analyzeImg(b64){
   document.getElementById('hero').classList.add('sc');
   setAI(true,'🤖 AI กำลังอ่านรูปภาพ...');
   try{
-    const r=await callG(b64,`วิเคราะห์รูปสกัดข้อมูลการเงิน ตอบ JSON เท่านั้น ห้าม backtick\n{"type":"income|expense","name":"ชื่อหลัก","amount":ยอดรวม,"category":"หมวด","note":"","items":[{"name":"","qty":1,"price":0}],"source":"receipt|bill|chat|image","raw_text":"ข้อความในรูป"}\nถ้าเป็นใบเสร็จแยก items ถ้าไม่พบยอดใส่ 0`);
+    const r=await callG(b64,`คุณคือผู้เชี่ยวชาญอ่านเอกสารการเงินของธุรกิจ SME ไทย วิเคราะห์รูปนี้แล้วตอบ JSON เท่านั้น ห้าม backtick หรือข้อความอื่นนอกจาก JSON
+
+รูปที่อาจพบ:
+- ใบเสร็จร้านค้า / ใบกำกับภาษี (มีตาราง ราคา รวม VAT)
+- กระดาษเขียนมือ เช่น "สินค้า 10x95=950" หรือ "ยอดรวม 3,300"
+- ภาพแชท Line/WhatsApp ที่มีข้อความยอดเงิน เช่น "ยอดรวม 3,300฿ จ้า"
+- ใบเสร็จขนส่ง DHL/Kerry/Flash/ไปรษณีย์
+
+กฎการหายอดเงิน (สำคัญมาก — ห้ามใส่ 0 ถ้าเห็นตัวเลข):
+1. ใบเสร็จ → หายอด Total / ยอดรวม / ยอดชำระ / Grand Total / Payment Received / ทั้งหมด
+2. กระดาษเขียนมือ → คำนวณเองถ้าเห็นสูตร เช่น 10x95 = 950 ให้ใช้ 950
+3. แชท Line → ดึงตัวเลขที่ระบุว่าเป็นยอดรวม เช่น "ยอดรวม 3,300฿" ให้ใช้ 3300
+4. ถ้ามีหลายยอด ให้เลือกยอดสุดท้ายที่จ่ายจริง
+5. ถ้าเป็นการซื้อสินค้า = expense, ถ้าเป็นการขายสินค้า/รับเงิน = income
+
+รูปแบบ JSON (ถ้าหลายรายการส่งเป็น array):
+{"type":"income|expense","name":"ชื่อร้าน หรือรายการสินค้าหลัก","amount":ตัวเลขยอดรวม,"category":"หมวดหมู่","note":"รายละเอียด เช่น จำนวน x ราคา","items":[{"name":"ชื่อสินค้า","qty":1,"price":0}],"source":"receipt|bill|chat|handwritten","raw_text":"ข้อความที่เห็นในรูป"}
+
+หมวดหมู่: วัตถุดิบ, ค่าขนส่ง, ค่าน้ำไฟ, เงินเดือน, อุปกรณ์, อาหาร, ขายสินค้า, อื่นๆ`);
     document.getElementById('hero').classList.remove('sc');setAI(false);showCfm(r,b64);
   }catch(e){document.getElementById('hero').classList.remove('sc');setAI(false);toast('❌ '+e.message);}
 }
