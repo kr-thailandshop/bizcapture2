@@ -1103,6 +1103,9 @@ async function saveSettings(){
   cfg.bizName=document.getElementById('sBiz').value.trim()||'ธุรกิจของฉัน';
   cfg.incomeCategories=_ic;cfg.expenseCategories=_ec;
   localStorage.setItem('bc_cfg',JSON.stringify(cfg));
+  // อัปเดตชื่อธุรกิจใน topbar ทันที
+  const bl=document.getElementById('bizNameLbl');
+  if(bl)bl.textContent=cfg.bizName;
   document.getElementById('ss').classList.remove('on');
   toast('💾 บันทึกแล้ว — กำลัง Sync...');
   try{await post({action:'saveConfig',config:cfg});toast('✅ Sync config สำเร็จ');}
