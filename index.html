@@ -514,15 +514,16 @@ let fil='all',pend=null,curImg=null,camStream=null,recog=null,vtxt='',detId=null
       new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')),ms))
     ]);
   }
+  setSyncUI('syncing');
   try{
-    const r=await fetchTimeout(SCRIPT_URL+'?action=config',5000);
+    const r=await fetchTimeout(SCRIPT_URL+'?action=config',12000);
     const d=await r.json();
     if(d.ok&&d.config){cfg={...cfg,...d.config};localStorage.setItem('bc_cfg',JSON.stringify(cfg));
       const bl=document.getElementById('bizNameLbl');if(bl)bl.textContent=cfg.bizName||'';
     }
-  }catch(e){setSyncUI('err');}
+  }catch(e){} // ไม่แสดง error ถ้าแค่ config โหลดไม่ได้
   try{
-    const r=await fetchTimeout(SCRIPT_URL+'?action=records',8000);
+    const r=await fetchTimeout(SCRIPT_URL+'?action=records',15000);
     const d=await r.json();
     if(d.ok&&Array.isArray(d.records)&&d.records.length){
       recs=d.records.map(r=>({...r,
@@ -532,9 +533,13 @@ let fil='all',pend=null,curImg=null,camStream=null,recog=null,vtxt='',detId=null
         date:r.date?new Date(String(r.date).replace(/(\d+)\/(\d+)\/(\d+)/,'$3-$2-$1')).toISOString():new Date().toISOString()
       }));
       localStorage.setItem('bc_recs',JSON.stringify(recs));
-      updStats();renderRecs();setSyncUI('ok');
+      updStats();renderRecs();
     }
-  }catch(e){setSyncUI('err');}
+    setSyncUI('ok');
+  }catch(e){
+    // ถ้าเน็ตไม่มีเลย = ออฟไลน์ / ถ้ามีเน็ตแต่ error = sync error
+    setSyncUI(navigator.onLine?'err':'offline');
+  }
   document.addEventListener('dragover',e=>e.preventDefault());
   document.addEventListener('drop',e=>{e.preventDefault();const f=e.dataTransfer.files[0];if(f?.type.startsWith('image/'))readImg(f);});
   document.addEventListener('paste',e=>{for(const it of e.clipboardData.items)if(it.type.startsWith('image/')){e.preventDefault();readImg(it.getAsFile());return;}});
@@ -1128,10 +1133,14 @@ function setSyncUI(s){
   const p=document.getElementById('sp'),l=document.getElementById('sl');
   p.className='spill';
   if(s==='ok'){p.classList.add('ok');l.textContent='Synced';}
-  else if(s==='syncing'){p.classList.add('syncing');l.textContent='Syncing...';}
+  else if(s==='syncing'){p.classList.add('syncing');l.textContent='กำลัง Sync...';}
   else if(s==='err'){p.classList.add('err');l.textContent='Sync Error';}
-  else l.textContent='ออฟไลน์';
+  else if(s==='offline'){l.textContent='ออฟไลน์';}
+  else{l.textContent='ออฟไลน์';}
 }
+// ฟัง online/offline event
+window.addEventListener('online',()=>{setSyncUI('syncing');setTimeout(()=>location.reload(),500);});
+window.addEventListener('offline',()=>setSyncUI('offline'));
 function sw2(v,el){
   document.querySelectorAll('.view').forEach(x=>x.classList.remove('on'));
   document.querySelectorAll('.nb').forEach(x=>x.classList.remove('on'));
