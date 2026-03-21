@@ -491,7 +491,7 @@ input[type=file]{display:none;}
 </script>
 <script>
 // ★ แก้เฉพาะ 2 บรรทัดนี้
-const SCRIPT_URL='https://script.google.com/macros/s/AKfycbzJXknwrV2XQZesO53ssrsKWfWKdwETyA6RtevKrhnMoYQwyYX_ug8vS4dCM_ZoxvQPhA/exec';
+const SCRIPT_URL='https://script.google.com/macros/s/AKfycbwsgDFN8vHaQ3jb9ifH04vX8dUBwbaNJi5badLrh6K3khOLVPeit3bsMvMQnOgdp4Niig/exec';
 const SHEET_URL='https://docs.google.com/spreadsheets/d/1KtbdZsOn5VlaFhCo0Gg_xh97IR-UbTA6aY9sUyRtbOU/edit';
 
 let recs=JSON.parse(localStorage.getItem('bc_recs')||'[]');
@@ -530,7 +530,7 @@ let fil='all',pend=null,curImg=null,camStream=null,recog=null,vtxt='',detId=null
         type:(r.type==='inc'||r.type==='รายรับ'||String(r.type).includes('รับ'))?'inc':'exp',
         amount:parseFloat(r.amount)||0,
         synced:true,
-        date:r.date?new Date(String(r.date).replace(/(\d+)\/(\d+)\/(\d+)/,'$3-$2-$1')).toISOString():new Date().toISOString()
+        date:parseDate(r.date).toISOString()
       }));
       localStorage.setItem('bc_recs',JSON.stringify(recs));
       updStats();renderRecs();
@@ -1114,6 +1114,31 @@ async function saveSettings(){
 function resetAll(){if(!confirm('ล้างข้อมูลในเครื่องทั้งหมด?'))return;localStorage.clear();location.reload();}
 
 // UTILS
+function parseDate(v){
+  if(!v)return new Date();
+  // ถ้าเป็น ISO string ปกติ
+  if(typeof v==='string'&&v.includes('T'))return new Date(v);
+  // ถ้าเป็น dd/MM/yyyy หรือ dd/MM/yy
+  if(typeof v==='string'&&v.includes('/')){
+    const p=v.split('/');
+    if(p.length===3){
+      var d=parseInt(p[0]),m=parseInt(p[1]),y=parseInt(p[2]);
+      if(y<100)y+=2000; // yy → yyyy
+      if(y>2400)y=y-543; // พ.ศ. → ค.ศ.
+      return new Date(y,m-1,d);
+    }
+  }
+  // ถ้าเป็น number (Excel serial date จาก Sheets)
+  if(typeof v==='number'||(!isNaN(Number(v))&&String(v).length<6)){
+    // Excel date serial: 1 = 1900-01-01
+    var n=Number(v);
+    var d=new Date(1899,11,30);
+    d.setDate(d.getDate()+n);
+    return d;
+  }
+  var r=new Date(v);
+  return isNaN(r)?new Date():r;
+}
 function fmt(n){return Number(n||0).toLocaleString('th-TH',{minimumFractionDigits:2,maximumFractionDigits:2});}
 function fmtK(n){return n>=10000?(n/1000).toFixed(1)+'K':fmt(n);}
 function updStats(){
