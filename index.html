@@ -349,7 +349,7 @@ input[type=file]{display:none;}
             <span class="cfelbl">ประเภท</span>
             <div class="cfetype">
               <button class="cfetbtn inc" id="cfebtn_inc" onclick="setCfType('inc')">+ รายรับ</button>
-              <button class="cfetbtn exp on" id="cfebtn_exp" onclick="setCfType('exp')">- รายจ่าย</button>
+              <button class="cfetbtn exp" id="cfebtn_exp" onclick="setCfType('exp')">- รายจ่าย</button>
             </div>
           </div>
           <div class="cferow">
@@ -751,14 +751,17 @@ async function analyzeImg(b64){
 
 // CONFIRM
 function setCfType(t){
+  // บันทึก type ลงใน global variable ที่แน่นอน
+  window._cfType=t;
   if(pend&&pend.entries)pend.entries[0].type=t;
   const ip=document.getElementById('cfebtn_inc'),ep=document.getElementById('cfebtn_exp');
   const cfp=document.getElementById('cfp');
-  ip.className='cfetbtn inc'+(t==='inc'?' on':'');
-  ep.className='cfetbtn exp'+(t==='exp'?' on':'');
-  cfp.className='cfp '+(t==='inc'?'i':'e');
+  // ใช้ setAttribute เพื่อความแน่นอน
+  ip.setAttribute('class','cfetbtn inc'+(t==='inc'?' on':''));
+  ep.setAttribute('class','cfetbtn exp'+(t==='exp'?' on':''));
+  cfp.setAttribute('class','cfp '+(t==='inc'?'i':'e'));
   cfp.textContent=t==='inc'?'+ รายรับ':'- รายจ่าย';
-  document.getElementById('cfa').className='cfa '+(t==='inc'?'i':'e');
+  document.getElementById('cfa').setAttribute('class','cfa '+(t==='inc'?'i':'e'));
   // อัปเดต dropdown หมวดหมู่ตามประเภท
   const cats=t==='inc'?cfg.incomeCategories:cfg.expenseCategories;
   const sel=document.getElementById('cfcat');
@@ -771,6 +774,7 @@ function showCfm(data,b64){
   const entries=Array.isArray(data)?data:[data],m=entries[0];
   // normalize type
   m.type=(m.type==='inc'||m.type==='income'||m.type==='รายรับ')?'inc':'exp';
+  window._cfType=m.type; // reset ทุกครั้งที่เปิด confirm ใหม่
   pend={entries,imgB64:b64||curImg};
   const isI=m.type==='inc';
   document.getElementById('cfp').textContent=isI?'+ รายรับ':'- รายจ่าย';
@@ -811,6 +815,11 @@ async function saveRecord(){
   document.getElementById('cfn').textContent=pend.entries[0].name;
   document.getElementById('cfa').textContent='฿'+fmt(pend.entries[0].amount);
   const {entries,imgB64}=pend,cat=document.getElementById('cfcat').value,now=new Date().toISOString();
+  // ดึง type จากปุ่มที่กด (สำคัญ! ไม่ใช่จาก AI)
+  // ดึง type จาก global variable ที่ setCfType เซ็ตไว้ (แน่นอนกว่า classList)
+  const selectedType=window._cfType||pend.entries[0].type||'exp';
+  // อัปเดต type ทุก entry ให้ตรงกับที่ผู้ใช้เลือก
+  entries.forEach(e=>{e.type=selectedType;});
   let imageUrl='';
   if(imgB64){
     showUpBar(true);animUp();
@@ -825,7 +834,7 @@ async function saveRecord(){
   for(const e of entries){
     const rec={
       id:Date.now()+'_'+Math.random().toString(36).slice(2,5),
-      type:e.type==='income'?'inc':'exp',
+      type:selectedType,
       name:e.name||'?',amount:parseFloat(e.amount)||0,
       category:cat||e.category||'อื่นๆ',
       note:e.note||'',items:e.items||[],raw:e.raw_text||'',
