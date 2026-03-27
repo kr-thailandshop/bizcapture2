@@ -491,7 +491,7 @@ input[type=file]{display:none;}
 </script>
 <script>
 // ★ แก้เฉพาะ 2 บรรทัดนี้
-const SCRIPT_URL='https://script.google.com/macros/s/AKfycbyzSQaom2CGdI77wHQJRaTVUHDvZa-MdrABnIwMKzVUesO_du_ICdw7KKFGtVupnZr8Eg/exec';
+const SCRIPT_URL='https://script.google.com/macros/s/AKfycbwYK9sPKv85VZsSM8GZDRX8ckuFuMfBNzpHXh_5dOeZ4xzq2J5ZrYUMCgyTvg9JLL7ZwQ/exec';
 const SHEET_URL='https://docs.google.com/spreadsheets/d/1KtbdZsOn5VlaFhCo0Gg_xh97IR-UbTA6aY9sUyRtbOU/edit';
 
 let recs=JSON.parse(localStorage.getItem('bc_recs')||'[]');
@@ -751,7 +751,7 @@ async function analyzeImg(b64){
 
 // CONFIRM
 function setCfType(t){
-  pend.entries[0].type=t;
+  if(pend&&pend.entries)pend.entries[0].type=t;
   const ip=document.getElementById('cfebtn_inc'),ep=document.getElementById('cfebtn_exp');
   const cfp=document.getElementById('cfp');
   ip.className='cfetbtn inc'+(t==='inc'?' on':'');
@@ -762,13 +762,19 @@ function setCfType(t){
 }
 function showCfm(data,b64){
   const entries=Array.isArray(data)?data:[data],m=entries[0];
+  // normalize type
+  m.type=(m.type==='inc'||m.type==='income'||m.type==='รายรับ')?'inc':'exp';
   pend={entries,imgB64:b64||curImg};
-  const isI=m.type==='income';
+  const isI=m.type==='inc';
   document.getElementById('cfp').textContent=isI?'+ รายรับ':'- รายจ่าย';
   document.getElementById('cfp').className='cfp '+(isI?'i':'e');
   document.getElementById('cfn').textContent=m.name||'?';
   document.getElementById('cfa').textContent='฿'+fmt(m.amount);
   document.getElementById('cfa').className='cfa '+(isI?'i':'e');
+  // populate edit fields
+  document.getElementById('cfename').value=m.name||'';
+  document.getElementById('cfeamt').value=m.amount||'';
+  setCfType(m.type);
   const cats=isI?cfg.incomeCategories:cfg.expenseCategories;
   const sel=document.getElementById('cfcat');
   const all=[...new Set([m.category,...cats].filter(Boolean))];
@@ -913,11 +919,15 @@ function openDetail(id){
 function closeDetail(){document.getElementById('ds').classList.remove('on');detId=null;}
 async function doDelete(){
   if(!detId||!confirm('ลบรายการนี้?'))return;
+  const idToDel=detId;
   // ลบจาก localStorage ก่อนเสมอ
-  recs=recs.filter(r=>r.id!=detId);
-  saveLocal();closeDetail();toast('🗑️ ลบแล้ว');
-  // แล้วค่อย sync ลบใน Sheets (ถ้าไม่ได้ก็ไม่เป็นไร)
-  try{await post({action:'deleteRecord',id:detId});}catch(_){}
+  recs=recs.filter(r=>r.id!=idToDel);
+  saveLocal();closeDetail();toast('🗑️ กำลังลบ...');
+  // sync ลบใน Sheets
+  try{
+    const r=await post({action:'deleteRecord',id:idToDel});
+    toast(r.ok&&r.deleted?'✅ ลบจาก Sheets แล้ว':'✅ ลบในเครื่องแล้ว (ไม่พบใน Sheets)');
+  }catch(_){toast('✅ ลบในเครื่องแล้ว');}
 }
 
 // REPORT
