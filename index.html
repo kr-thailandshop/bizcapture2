@@ -759,6 +759,13 @@ function setCfType(t){
   cfp.className='cfp '+(t==='inc'?'i':'e');
   cfp.textContent=t==='inc'?'+ รายรับ':'- รายจ่าย';
   document.getElementById('cfa').className='cfa '+(t==='inc'?'i':'e');
+  // อัปเดต dropdown หมวดหมู่ตามประเภท
+  const cats=t==='inc'?cfg.incomeCategories:cfg.expenseCategories;
+  const sel=document.getElementById('cfcat');
+  if(sel&&cats){
+    const cur=sel.value;
+    sel.innerHTML=cats.map(c=>`<option value="${c}" ${c===cur?'selected':''}>${c}</option>`).join('');
+  }
 }
 function showCfm(data,b64){
   const entries=Array.isArray(data)?data:[data],m=entries[0];
@@ -789,8 +796,12 @@ function showCfm(data,b64){
 function dismissConfirm(){document.getElementById('cfm').classList.remove('on');pend=null;}
 
 // SAVE + UPLOAD + SYNC
+let _saving=false;
 async function saveRecord(){
-  if(!pend)return;
+  if(!pend||_saving)return;
+  _saving=true;
+  const btn=document.querySelector('.cfbtn.sv');
+  if(btn){btn.disabled=true;btn.textContent='⏳ กำลังบันทึก...';}
   // อัปเดตจาก edit fields ก่อนบันทึก
   const ename=document.getElementById('cfename').value.trim();
   const eamt=parseFloat(document.getElementById('cfeamt').value)||0;
@@ -826,6 +837,8 @@ async function saveRecord(){
   saveLocal();
   toast(`💾 บันทึก ${entries.length} รายการ${imageUrl?' + รูปใน Drive':''} ✅`);
   setSyncUI(recs.every(r=>r.synced)?'ok':'err');
+  _saving=false;
+  if(btn){btn.disabled=false;btn.textContent='✓ บันทึก + Sync';}
 }
 
 function showUpBar(on){const b=document.getElementById('upb');on?b.classList.add('on'):b.classList.remove('on');if(!on)document.getElementById('upf').style.width='0%';}
