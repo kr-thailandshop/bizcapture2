@@ -42,6 +42,12 @@ body{font-family:'Noto Sans Thai',sans-serif;background:var(--bg);color:var(--t1
 .chip.e{background:var(--eg);color:var(--exp);}
 .ibtn{width:36px;height:36px;border-radius:10px;background:var(--glass);border:1px solid var(--gb);color:var(--t2);cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;}
 .ibtn:active{transform:scale(.92);}
+.stoggle{height:28px;padding:0 10px;border-radius:20px;border:1.5px solid var(--gb);background:var(--glass);cursor:pointer;font-size:.68rem;font-weight:700;font-family:'Noto Sans Thai',sans-serif;display:flex;align-items:center;gap:5px;transition:all .2s;white-space:nowrap;}
+.stoggle.on{background:rgba(0,229,160,.12);border-color:var(--ig);color:var(--inc);}
+.stoggle.off{background:rgba(255,61,107,.1);border-color:var(--eg);color:var(--exp);}
+.stdot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.stoggle.on .stdot{background:var(--inc);box-shadow:0 0 5px var(--inc);}
+.stoggle.off .stdot{background:var(--exp);}
 /* BODY + VIEWS */
 .body{flex:1;overflow-y:auto;overflow-x:hidden;}
 .body::-webkit-scrollbar{display:none;}
@@ -297,6 +303,9 @@ input[type=file]{display:none;}
         <div class="chip i" id="tI">฿0</div>
         <div class="chip e" id="tE">฿0</div>
       </div>
+      <button class="stoggle on" id="stbtn" onclick="toggleSync()">
+        <div class="stdot"></div><span id="stlbl">Sync เปิด</span>
+      </button>
       <button class="ibtn" onclick="openSettings()">&#x2699;&#xFE0F;</button>
     </div>
   </div>
@@ -503,6 +512,7 @@ let fil='all',pend=null,curImg=null,camStream=null,recog=null,vtxt='',detId=null
   document.getElementById('ls').classList.add('gone');
   document.getElementById('app').style.display='flex';
   updStats();renderRecs();setSyncUI('ok');
+  updateSyncToggleUI();
   // แสดงชื่อธุรกิจ
   const bl=document.getElementById('bizNameLbl');
   if(bl)bl.textContent=cfg.bizName||'';
@@ -579,6 +589,7 @@ if('serviceWorker' in navigator){
 function sl(ms){return new Promise(r=>setTimeout(r,ms));}
 
 async function post(body){
+  if(!syncEnabled)throw new Error('Sync ปิดอยู่ — ข้อมูลบันทึกในเครื่องเท่านั้น');
   const r=await fetch(SCRIPT_URL,{method:'POST',redirect:'follow',headers:{'Content-Type':'text/plain'},body:JSON.stringify(body)});
   return r.json();
 }
@@ -1149,6 +1160,21 @@ async function saveSettings(){
   catch(e){toast('⚠️ Sync ไม่ได้: '+e.message);}
 }
 function resetAll(){if(!confirm('ล้างข้อมูลในเครื่องทั้งหมด?'))return;localStorage.clear();location.reload();}
+
+// SYNC TOGGLE
+let syncEnabled=JSON.parse(localStorage.getItem('bc_sync')||'true');
+function toggleSync(){
+  syncEnabled=!syncEnabled;
+  localStorage.setItem('bc_sync',JSON.stringify(syncEnabled));
+  updateSyncToggleUI();
+  toast(syncEnabled?'☁️ เปิด Sync แล้ว — ข้อมูลจะส่งไป Sheets':'🚫 ปิด Sync แล้ว — บันทึกในเครื่องเท่านั้น');
+}
+function updateSyncToggleUI(){
+  const btn=document.getElementById('stbtn'),lbl=document.getElementById('stlbl');
+  if(!btn)return;
+  btn.className='stoggle '+(syncEnabled?'on':'off');
+  lbl.textContent=syncEnabled?'Sync เปิด':'Sync ปิด';
+}
 
 // UTILS
 function parseDate(v){
