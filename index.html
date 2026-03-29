@@ -260,6 +260,31 @@ body{font-family:'Noto Sans Thai',sans-serif;background:var(--bg);color:var(--t1
 .taxlbl{color:var(--t2);}
 .taxval{font-family:'JetBrains Mono',monospace;font-weight:700;}
 .taxsec{font-size:.68rem;color:var(--t3);text-transform:uppercase;letter-spacing:1px;margin:12px 0 6px;font-weight:700;}
+/* API KEY INPUT */
+.apirow{display:flex;gap:8px;align-items:center;margin-bottom:8px;}
+.apiinp{flex:1;background:rgba(255,255,255,.05);border:1.5px solid var(--gb);border-radius:var(--rs);padding:11px 14px;color:var(--t1);font-family:'JetBrains Mono',monospace;font-size:.78rem;letter-spacing:.5px;}
+.apiinp:focus{outline:none;border-color:var(--acc);}
+.apibtn{padding:11px 14px;border-radius:var(--rs);border:none;font-family:'Noto Sans Thai',sans-serif;font-size:.8rem;font-weight:700;cursor:pointer;white-space:nowrap;}
+.apibtn.test{background:rgba(79,141,255,.15);border:1.5px solid rgba(79,141,255,.3);color:var(--acc);}
+.apibtn.save{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;}
+.apistatus{display:flex;align-items:center;gap:7px;padding:9px 13px;border-radius:var(--rs);font-size:.78rem;font-weight:600;margin-bottom:10px;}
+.apistatus.ok{background:rgba(0,229,160,.1);border:1px solid rgba(0,229,160,.2);color:var(--inc);}
+.apistatus.err{background:rgba(255,61,107,.1);border:1px solid rgba(255,61,107,.2);color:var(--exp);}
+.apistatus.none{background:rgba(255,255,255,.04);border:1px solid var(--gb);color:var(--t2);}
+.apistatus.testing{background:rgba(255,187,51,.1);border:1px solid rgba(255,187,51,.2);color:var(--gold);}
+.apidot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.apistatus.ok .apidot{background:var(--inc);box-shadow:0 0 6px var(--inc);}
+.apistatus.err .apidot{background:var(--exp);}
+.apistatus.none .apidot{background:var(--t3);}
+.apistatus.testing .apidot{background:var(--gold);animation:pp .6s infinite;}
+.apilink{font-size:.72rem;color:var(--acc);text-decoration:none;display:block;margin-bottom:14px;opacity:.8;}
+.apiproviders{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px;}
+.apiprov{padding:10px 12px;background:rgba(255,255,255,.04);border:1.5px solid var(--gb);border-radius:var(--rs);cursor:pointer;transition:all .15s;}
+.apiprov.on{border-color:var(--acc);background:rgba(79,141,255,.1);}
+.apiprov:active{transform:scale(.97);}
+.apiprovname{font-size:.8rem;font-weight:700;margin-bottom:2px;}
+.apiprovdesc{font-size:.65rem;color:var(--t2);}
+.apiprov.on .apiprovname{color:var(--acc);}
 /* NAV */
 .bnav{position:fixed;bottom:0;left:0;right:0;background:rgba(8,13,26,.85);border-top:1px solid var(--gb);backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);display:flex;padding-bottom:var(--safe-b);z-index:50;}
 .nb{flex:1;padding:10px 8px 8px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;background:none;border:none;color:var(--t3);font-family:'Noto Sans Thai',sans-serif;font-size:.71rem;font-weight:700;position:relative;}
@@ -534,19 +559,65 @@ input[type=file]{display:none;}
 <div class="so" id="ss" onclick="csbg(event,'ss')">
   <div class="sh">
     <div class="shh"></div>
-    <div class="shtit">&#x2699;&#xFE0F; &#x0E15;&#x0E31;&#x0E49;&#x0E07;&#x0E04;&#x0E48;&#x0E32;</div>
-    <div class="ssec">&#x0E02;&#x0E49;&#x0E2D;&#x0E21;&#x0E39;&#x0E25;&#x0E18;&#x0E38;&#x0E23;&#x0E01;&#x0E34;&#x0E08;</div>
-    <div class="slbl">&#x0E0A;&#x0E37;&#x0E48;&#x0E2D;&#x0E18;&#x0E38;&#x0E23;&#x0E01;&#x0E34;&#x0E08;</div>
-    <input class="sinput" id="sBiz" placeholder="&#x0E23;&#x0E49;&#x0E32;&#x0E19;&#x0E04;&#x0E49;&#x0E32;&#x0E02;&#x0E2D;&#x0E07;&#x0E09;&#x0E31;&#x0E19;">
-    <div class="ssec">&#x0E2B;&#x0E21;&#x0E27;&#x0E14;&#x0E2B;&#x0E21;&#x0E39;&#x0E48;&#x0E23;&#x0E32;&#x0E22;&#x0E23;&#x0E31;&#x0E1A;</div>
+    <div class="shtit">⚙️ ตั้งค่า</div>
+
+    <!-- ── AI API KEY ── -->
+    <div class="ssec" style="color:var(--gold)">🤖 AI API Key</div>
+    <div class="apistatus none" id="apiStatus">
+      <div class="apidot"></div><span id="apiStatusTxt">ยังไม่ได้ตั้งค่า API Key</span>
+    </div>
+    <!-- เลือก Provider -->
+    <div class="slbl" style="margin-bottom:8px">เลือก AI Provider</div>
+    <div class="apiproviders">
+      <div class="apiprov on" id="prov_gemini" onclick="selectProvider('gemini')">
+        <div class="apiprovname">🔵 Google Gemini</div>
+        <div class="apiprovdesc">Flash 2.0 · ฟรี 1,500/วัน</div>
+      </div>
+      <div class="apiprov" id="prov_claude" onclick="selectProvider('claude')">
+        <div class="apiprovname">🟠 Claude</div>
+        <div class="apiprovdesc">Sonnet · อ่านรูปแม่น · $5 ฟรีแรก</div>
+      </div>
+      <div class="apiprov" id="prov_openai" onclick="selectProvider('openai')">
+        <div class="apiprovname">🟢 OpenAI</div>
+        <div class="apiprovdesc">GPT-4o · Pay-per-use</div>
+      </div>
+      <div class="apiprov" id="prov_llama" onclick="selectProvider('llama')">
+        <div class="apiprovname">🦙 Llama 4 (Meta)</div>
+        <div class="apiprovdesc" style="color:var(--inc)">✅ ฟรี! · อ่านรูปได้ · via Groq</div>
+      </div>
+      <div class="apiprov" id="prov_groq" onclick="selectProvider('groq')">
+        <div class="apiprovname">⚡ Groq</div>
+        <div class="apiprovdesc" style="color:var(--inc)">✅ ฟรี! เร็วมาก · text เท่านั้น</div>
+      </div>
+      <div class="apiprov" id="prov_custom" onclick="selectProvider('custom')">
+        <div class="apiprovname">⚙️ Custom</div>
+        <div class="apiprovdesc">API อื่นๆ กำหนดเอง</div>
+      </div>
+    </div>
+    <!-- ลิงก์ขอ Key -->
+    <a id="apiGetLink" href="https://aistudio.google.com/apikey" target="_blank" class="apilink">🔑 ขอ API Key ฟรีที่นี่ ↗</a>
+    <!-- ช่องใส่ Key -->
+    <div class="slbl">API Key</div>
+    <div class="apirow">
+      <input class="apiinp" id="apiKeyInp" type="password" placeholder="วาง API Key ที่นี่..." autocomplete="off" spellcheck="false">
+      <button class="apibtn test" onclick="testApiKey()">🧪 ทดสอบ</button>
+    </div>
+    <button class="ssave" style="margin-bottom:8px" onclick="saveApiKey()">🔑 บันทึก API Key</button>
+    <button class="sdanger" style="margin-bottom:20px;font-size:.75rem" onclick="clearApiKey()">🗑️ ลบ API Key ออก</button>
+
+    <!-- ── ข้อมูลธุรกิจ ── -->
+    <div class="ssec">ข้อมูลธุรกิจ</div>
+    <div class="slbl">ชื่อธุรกิจ</div>
+    <input class="sinput" id="sBiz" placeholder="ร้านค้าของฉัน">
+    <div class="ssec">หมวดหมู่รายรับ</div>
     <div class="tlist" id="icl"></div>
-    <div class="tarow"><input class="tainp" id="ici" placeholder="&#x0E40;&#x0E1E;&#x0E34;&#x0E48;&#x0E21;&#x0E2B;&#x0E21;&#x0E27;&#x0E14;&#x0E2B;&#x0E21;&#x0E39;&#x0E48;..." onkeydown="if(event.key==='Enter')addCat('inc')"><button class="tabtn" onclick="addCat('inc')">+ &#x0E40;&#x0E1E;&#x0E34;&#x0E48;&#x0E21;</button></div>
-    <div class="ssec" style="margin-top:16px">&#x0E2B;&#x0E21;&#x0E27;&#x0E14;&#x0E2B;&#x0E21;&#x0E39;&#x0E48;&#x0E23;&#x0E32;&#x0E22;&#x0E08;&#x0E48;&#x0E32;&#x0E22;</div>
+    <div class="tarow"><input class="tainp" id="ici" placeholder="เพิ่มหมวดหมู่..." onkeydown="if(event.key==='Enter')addCat('inc')"><button class="tabtn" onclick="addCat('inc')">+ เพิ่ม</button></div>
+    <div class="ssec" style="margin-top:16px">หมวดหมู่รายจ่าย</div>
     <div class="tlist" id="ecl"></div>
-    <div class="tarow"><input class="tainp" id="eci" placeholder="&#x0E40;&#x0E1E;&#x0E34;&#x0E48;&#x0E21;&#x0E2B;&#x0E21;&#x0E27;&#x0E14;&#x0E2B;&#x0E21;&#x0E39;&#x0E48;..." onkeydown="if(event.key==='Enter')addCat('exp')"><button class="tabtn" onclick="addCat('exp')">+ &#x0E40;&#x0E1E;&#x0E34;&#x0E48;&#x0E21;</button></div>
+    <div class="tarow"><input class="tainp" id="eci" placeholder="เพิ่มหมวดหมู่..." onkeydown="if(event.key==='Enter')addCat('exp')"><button class="tabtn" onclick="addCat('exp')">+ เพิ่ม</button></div>
     <div style="margin-top:20px"></div>
-    <button class="ssave" onclick="saveSettings()">&#x1F4BE; &#x0E1A;&#x0E31;&#x0E19;&#x0E17;&#x0E36;&#x0E01;&#x0E41;&#x0E25;&#x0E30; Sync &#x0E44;&#x0E1B; Sheets</button>
-    <button class="sdanger" onclick="resetAll()">&#x26A0;&#xFE0F; &#x0E25;&#x0E49;&#x0E32;&#x0E07;&#x0E02;&#x0E49;&#x0E2D;&#x0E21;&#x0E39;&#x0E25;&#x0E43;&#x0E19;&#x0E40;&#x0E04;&#x0E23;&#x0E37;&#x0E48;&#x0E2D;&#x0E07;</button>
+    <button class="ssave" onclick="saveSettings()">💾 บันทึกและ Sync ไป Sheets</button>
+    <button class="sdanger" onclick="resetAll()">⚠️ ล้างข้อมูลในเครื่อง</button>
   </div>
 </div>
 <!-- SUCCESS POPUP -->
@@ -571,8 +642,61 @@ input[type=file]{display:none;}
 </script>
 <script>
 // ★ แก้เฉพาะ 2 บรรทัดนี้
-const SCRIPT_URL='https://script.google.com/macros/s/AKfycbyB_Pwo3Zvq7UEJaKJL0_KirjxUArokTPTPo6_sf3KZR3DjS1nbWNY4BfjE3tqI0hjR0g/exec';
+const SCRIPT_URL='https://script.google.com/macros/s/AKfycbw0ws4IztZVvufafK-56atRdQPU0En8OGF1T6QAq1O4aefD7SjkelV6oQtMlNyqxJE3zA/exec';
 const SHEET_URL='https://docs.google.com/spreadsheets/d/1KtbdZsOn5VlaFhCo0Gg_xh97IR-UbTA6aY9sUyRtbOU/edit';
+
+// ── API Key & Provider config ──
+const PROVIDERS={
+  gemini:{
+    name:'Google Gemini',
+    icon:'🔵',
+    url:'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent',
+    keyLink:'https://aistudio.google.com/apikey',
+    keyHint:'AIza...',
+    keyDesc:'ฟรี 1,500 req/วัน · ขอได้ที่ aistudio.google.com'
+  },
+  claude:{
+    name:'Claude (Anthropic)',
+    icon:'🟠',
+    url:'https://api.anthropic.com/v1/messages',
+    keyLink:'https://console.anthropic.com/keys',
+    keyHint:'sk-ant-...',
+    keyDesc:'$5 ฟรีแรก · อ่านรูปแม่นมาก · console.anthropic.com'
+  },
+  openai:{
+    name:'OpenAI (GPT-4o)',
+    icon:'🟢',
+    url:'https://api.openai.com/v1/chat/completions',
+    keyLink:'https://platform.openai.com/api-keys',
+    keyHint:'sk-...',
+    keyDesc:'Pay-per-use · ขอได้ที่ platform.openai.com'
+  },
+  llama:{
+    name:'Llama 4 (Meta) via Groq',
+    icon:'🦙',
+    url:'https://api.groq.com/openai/v1/chat/completions',
+    keyLink:'https://console.groq.com/keys',
+    keyHint:'gsk_...',
+    keyDesc:'✅ ฟรี! เร็วมาก · อ่านรูปได้ · ขอ Key ที่ console.groq.com'
+  },
+  groq:{
+    name:'Groq (Llama 3.3 70B)',
+    icon:'⚡',
+    url:'https://api.groq.com/openai/v1/chat/completions',
+    keyLink:'https://console.groq.com/keys',
+    keyHint:'gsk_...',
+    keyDesc:'✅ ฟรี! เร็วที่สุด · text เท่านั้น · console.groq.com'
+  },
+  custom:{
+    name:'Custom API',
+    icon:'⚙️',
+    url:'',
+    keyLink:'',
+    keyHint:'ใส่ API Key...',
+    keyDesc:'กำหนด endpoint เองใน Apps Script'
+  }
+};
+let currentProvider=localStorage.getItem('bc_provider')||'gemini';
 
 let recs=JSON.parse(localStorage.getItem('bc_recs')||'[]');
 let cfg=JSON.parse(localStorage.getItem('bc_cfg')||'null')||{bizName:'ธุรกิจของฉัน',incomeCategories:['ขายสินค้า Beauty','ขายเสื้อผ้า','ขายส่ง','บริการ','อื่นๆ'],expenseCategories:['วัตถุดิบ/สินค้า','ค่าขนส่ง','ค่าแพ็คของ','ค่าโฆษณา','ค่าน้ำไฟ','เงินเดือน','อื่นๆ']};
@@ -779,6 +903,10 @@ function closeVoice(){if(recog){try{recog.stop();}catch(_){}recog=null;}vtxt='';
 
 // GEMINI (ผ่าน Apps Script Proxy)
 async function callG(b64, prompt){
+  // ดึง API Key จาก localStorage ก่อน — ถ้าไม่มีค่อยใช้ key ที่ตั้งไว้ใน Apps Script
+  const localKey = localStorage.getItem('bc_apikey')||'';
+  const provider  = localStorage.getItem('bc_provider')||'gemini';
+
   const parts = [];
   if(b64) parts.push({inline_data:{mime_type:'image/jpeg', data:b64}});
   parts.push({text: prompt});
@@ -788,12 +916,16 @@ async function callG(b64, prompt){
     const r = await fetch(SCRIPT_URL, {
       method:'POST', redirect:'follow',
       headers:{'Content-Type':'text/plain'},
-      body: JSON.stringify({ action:'gemini', contents:[{parts}] })
+      body: JSON.stringify({
+        action:'gemini',
+        contents:[{parts}],
+        apiKey: localKey,      // ← ส่ง key จาก localStorage
+        provider: provider     // ← ส่ง provider
+      })
     });
 
     rawText = await r.text();
 
-    // Apps Script ส่ง HTML กลับ = ยังไม่ Deploy หรือ permission ผิด
     if(!rawText || rawText.trim().startsWith('<')){
       throw new Error('Apps Script ยังไม่ได้ Deploy หรือ permission ผิด — Deploy ใหม่แบบ "Anyone"');
     }
@@ -802,10 +934,8 @@ async function callG(b64, prompt){
     try{ d = JSON.parse(rawText); }
     catch(ex){ throw new Error('Response ไม่ใช่ JSON: '+rawText.slice(0,100)); }
 
-    // Apps Script ส่ง {ok:false, error:'...'} = มี error ฝั่ง proxy
     if(d.ok === false) throw new Error(d.error || 'Gemini proxy error');
 
-    // ดึง text จาก candidates[0]
     if(!d.candidates || d.candidates.length === 0){
       throw new Error('ไม่พบ candidates: '+JSON.stringify(d).slice(0,150));
     }
@@ -813,18 +943,12 @@ async function callG(b64, prompt){
     const part0 = d.candidates[0]?.content?.parts?.[0];
     if(!part0) throw new Error('candidates[0].content.parts ว่าง');
 
-    // Gemini ส่ง 2 แบบขึ้นกับ responseMimeType:
-    // แบบ A (responseMimeType:'application/json'): part0 = {text: '{"type":...}'}  ← JSON string ใน text
-    // แบบ B (ไม่ระบุ): part0 = {text: '```json\n{"type":...}\n```'}               ← ห่อ markdown
     let txt = part0.text || '';
     txt = txt.replace(/```json\s*/gi,'').replace(/```\s*/g,'').trim();
+    if(!txt) throw new Error('Gemini ตอบกลับว่าง — เช็ค API Key ในหน้าตั้งค่า');
 
-    if(!txt) throw new Error('Gemini ตอบกลับว่าง — เช็ค GEMINI_API_KEY');
-
-    // Parse JSON
     try{ return JSON.parse(txt); }
     catch(ex){
-      // หา JSON block ถ้ามีข้อความปน
       const m = txt.match(/(\[[\s\S]*\]|\{[\s\S]*\})/);
       if(m){ try{ return JSON.parse(m[0]); }catch{} }
       throw new Error('AI ตอบไม่ใช่ JSON: '+txt.slice(0,150));
@@ -1414,7 +1538,93 @@ function openSettings(){
   _ic=[...cfg.incomeCategories];_ec=[...cfg.expenseCategories];
   document.getElementById('sBiz').value=cfg.bizName||'';
   rCatTags('inc');rCatTags('exp');
+  // โหลด API Key UI
+  initApiKeyUI();
   document.getElementById('ss').classList.add('on');
+}
+
+// ── API KEY MANAGEMENT ──
+function initApiKeyUI(){
+  const key=localStorage.getItem('bc_apikey')||'';
+  const prov=localStorage.getItem('bc_provider')||'gemini';
+  currentProvider=prov;
+  // แสดง key แบบ mask
+  const inp=document.getElementById('apiKeyInp');
+  inp.value=key?key:'';
+  inp.placeholder=PROVIDERS[prov]?.keyHint||'วาง API Key ที่นี่...';
+  // highlight provider ที่เลือก
+  document.querySelectorAll('.apiprov').forEach(el=>el.classList.remove('on'));
+  const provEl=document.getElementById('prov_'+prov);
+  if(provEl) provEl.classList.add('on');
+  // อัปเดตลิงก์ขอ key
+  const link=document.getElementById('apiGetLink');
+  const p=PROVIDERS[prov];
+  if(p?.keyLink){link.href=p.keyLink;link.textContent='🔑 ขอ API Key ('+p.name+') ↗';link.style.display='block';}
+  else{link.style.display='none';}
+  // แสดงสถานะ
+  updateApiStatus(key?'set':'none', key?'✅ ตั้งค่าแล้ว ('+maskKey(key)+')':'⚪ ยังไม่ได้ใส่ API Key');
+}
+function maskKey(k){
+  if(!k||k.length<8) return '***';
+  return k.slice(0,6)+'...'+k.slice(-4);
+}
+function updateApiStatus(state, msg){
+  const el=document.getElementById('apiStatus');
+  el.className='apistatus '+state;
+  document.getElementById('apiStatusTxt').textContent=msg;
+}
+function selectProvider(prov){
+  currentProvider=prov;
+  localStorage.setItem('bc_provider',prov);
+  document.querySelectorAll('.apiprov').forEach(el=>el.classList.remove('on'));
+  document.getElementById('prov_'+prov)?.classList.add('on');
+  const p=PROVIDERS[prov];
+  document.getElementById('apiKeyInp').placeholder=p?.keyHint||'วาง API Key...';
+  const link=document.getElementById('apiGetLink');
+  if(p?.keyLink){link.href=p.keyLink;link.textContent='🔑 ขอ API Key ('+p.name+') ↗';link.style.display='block';}
+  else{link.style.display='none';}
+  toast('🔄 เปลี่ยนเป็น '+p.name);
+}
+function saveApiKey(){
+  const key=document.getElementById('apiKeyInp').value.trim();
+  if(!key){toast('⚠️ กรุณาใส่ API Key ก่อน');return;}
+  localStorage.setItem('bc_apikey',key);
+  localStorage.setItem('bc_provider',currentProvider);
+  updateApiStatus('ok','✅ บันทึกแล้ว ('+maskKey(key)+')');
+  toast('🔑 บันทึก API Key แล้ว');
+  // ส่ง key ไปบันทึกใน Apps Script Properties ด้วย (optional)
+  post({action:'saveApiKey', apiKey:key, provider:currentProvider}).catch(()=>{});
+}
+async function testApiKey(){
+  const key=document.getElementById('apiKeyInp').value.trim();
+  if(!key){toast('⚠️ ใส่ API Key ก่อนทดสอบ');return;}
+  updateApiStatus('testing','⏳ กำลังทดสอบ...');
+  try{
+    // ทดสอบผ่าน Apps Script proxy
+    const r=await fetch(SCRIPT_URL,{
+      method:'POST',redirect:'follow',
+      headers:{'Content-Type':'text/plain'},
+      body:JSON.stringify({action:'testApiKey',apiKey:key,provider:currentProvider})
+    });
+    const d=await r.json();
+    if(d.ok){
+      updateApiStatus('ok','✅ ใช้งานได้! ('+maskKey(key)+')');
+      toast('✅ API Key ใช้งานได้ปกติ');
+    } else {
+      updateApiStatus('err','❌ '+(d.error||'Key ไม่ถูกต้อง'));
+      toast('❌ '+(d.error||'API Key ไม่ถูกต้อง'));
+    }
+  }catch(e){
+    updateApiStatus('err','❌ เชื่อมต่อไม่ได้: '+e.message.slice(0,50));
+    toast('❌ ทดสอบไม่ได้: '+e.message.slice(0,60));
+  }
+}
+function clearApiKey(){
+  if(!confirm('ลบ API Key ออกจากเครื่อง?'))return;
+  localStorage.removeItem('bc_apikey');
+  document.getElementById('apiKeyInp').value='';
+  updateApiStatus('none','⚪ ยังไม่ได้ใส่ API Key');
+  toast('🗑️ ลบ API Key แล้ว');
 }
 function rCatTags(t){
   const cats=t==='inc'?_ic:_ec;
