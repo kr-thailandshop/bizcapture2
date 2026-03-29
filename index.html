@@ -500,7 +500,7 @@ input[type=file]{display:none;}
 </script>
 <script>
 // ★ แก้เฉพาะ 2 บรรทัดนี้
-const SCRIPT_URL='https://script.google.com/macros/s/AKfycbzD8cUsdLc-nCug7m1m1B0oz1Kzxot2A5fxj3PtaeTuZ_NkG3gycCM4HqnkPFzuSqhYwQ/exec';
+const SCRIPT_URL='https://script.google.com/macros/s/AKfycbxOfszHA2SOdKP6UfmEBte7URV1_ioSo3QpAnIzIEpU76LTcT_I5od-Mj708-Uzubtueg/exec';
 const SHEET_URL='https://docs.google.com/spreadsheets/d/1KtbdZsOn5VlaFhCo0Gg_xh97IR-UbTA6aY9sUyRtbOU/edit';
 
 let recs=JSON.parse(localStorage.getItem('bc_recs')||'[]');
@@ -696,8 +696,11 @@ async function callG(b64, prompt){
   if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error((e?.error||'HTTP '+r.status).toString().slice(0,100));}
   const d = await r.json();
   if(d.ok===false) throw new Error(d.error||'Gemini error');
-  // parse Gemini response format
-  const txt = (d.candidates?.[0]?.content?.parts?.[0]?.text||'').replace(/```json|```/g,'').trim();
+  // parse Gemini response — รองรับทั้ง candidates format และ direct JSON
+  let txt='';
+  if(d.candidates) txt=(d.candidates[0]?.content?.parts?.[0]?.text||'');
+  else txt=typeof d==='string'?d:JSON.stringify(d);
+  txt=txt.replace(/```json|```/g,'').trim();
   if(!txt) throw new Error('Gemini ไม่ตอบกลับ — เช็ค GEMINI_API_KEY ใน Script Properties');
   try{return JSON.parse(txt);}catch(ex){
     const m=txt.match(/\{[\s\S]*\}|\[[\s\S]*\]/);
