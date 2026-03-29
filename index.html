@@ -725,7 +725,7 @@ async function sendText(){
 - ถ้าไม่บอกประเภท ให้เดาจากบริบท เช่น "น้ำมัน" = expense, "ขายของ" = income
 - amount ต้องเป็นตัวเลขเท่านั้น ห้ามใส่ 0 ถ้ามีตัวเลขในข้อความ
 
-JSON: {"type":"income|expense","name":"ชื่อรายการ","amount":ตัวเลข,"category":"หมวด","note":"","items":[{"name":"","qty":1,"price":0}],"source":"text"}
+JSON: {"type":"inc หรือ exp เท่านั้น","name":"ชื่อรายการ","amount":ตัวเลข,"category":"หมวด","note":"","items":[{"name":"","qty":1,"price":0}],"source":"text"}
 หมวด: วัตถุดิบ, ค่าขนส่ง, ค่าน้ำไฟ, เงินเดือน, อุปกรณ์, ขายสินค้า, อาหาร, อื่นๆ
 
 ข้อความ: ${txt}`);
@@ -758,7 +758,7 @@ async function analyzeImg(b64){
 - ถ้าเห็นทั้ง Total และ CASH/Change ให้คำนวณ CASH - Change ก่อนเสมอ
 
 รูปแบบ JSON:
-{"type":"income|expense","name":"ชื่อร้านหรือคู่โอน","amount":ตัวเลข,"category":"หมวดหมู่","note":"รายละเอียด","items":[{"name":"","qty":1,"price":0}],"source":"receipt|slip|bill|chat|handwritten","raw_text":"ข้อความที่เห็น"}
+{"type":"inc หรือ exp เท่านั้น","name":"ชื่อร้านหรือคู่โอน","amount":ตัวเลขไม่มีลูกน้ำ,"category":"หมวดหมู่","note":"รายละเอียด","items":[{"name":"ชื่อสินค้า","qty":1,"price":0}],"source":"receipt"}
 
 หมวดหมู่รายจ่าย: วัตถุดิบ/สินค้า, ค่าขนส่ง, ค่าแพ็คของ, ค่าโฆษณา, ค่าน้ำไฟ, เงินเดือน, อื่นๆ | หมวดหมู่รายรับ: ขายสินค้า Beauty, ขายเสื้อผ้า, ขายส่ง, อื่นๆ`);
     document.getElementById('hero').classList.remove('sc');setAI(false);showCfm(r,b64);
@@ -789,7 +789,9 @@ function setCfType(t){
 function showCfm(data,b64){
   const entries=Array.isArray(data)?data:[data],m=entries[0];
   // normalize type
-  m.type=(m.type==='inc'||m.type==='income'||m.type==='รายรับ')?'inc':'exp';
+  // normalize type จาก Gemini ที่อาจตอบ income/expense/inc/exp/รายรับ/รายจ่าย
+  const _t=String(m.type||'').toLowerCase();
+  m.type=(_t==='inc'||_t==='income'||_t==='รายรับ'||_t.includes('รับ')||_t.includes('income'))?'inc':'exp';
   window._cfType=m.type; // reset ทุกครั้งที่เปิด confirm ใหม่
   pend={entries,imgB64:b64||curImg};
   const isI=m.type==='inc';
