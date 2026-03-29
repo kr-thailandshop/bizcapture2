@@ -102,29 +102,70 @@ body{font-family:'Noto Sans Thai',sans-serif;background:var(--bg);color:var(--t1
 .upp{flex:1;height:4px;background:rgba(79,141,255,.2);border-radius:2px;overflow:hidden;}
 .upf{height:100%;background:var(--acc);border-radius:2px;transition:width .3s;}
 /* CONFIRM */
-.cfm{background:var(--glass);border:1.5px solid var(--gb);border-radius:var(--rl);overflow:hidden;margin-bottom:12px;display:none;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);}
-.cfm.on{display:block;animation:pu .22s cubic-bezier(.34,1.56,.64,1);}
-@keyframes pu{from{opacity:0;transform:translateY(12px) scale(.97)}to{opacity:1;transform:none}}
-.cfh{padding:14px 16px;border-bottom:1px solid var(--gb);display:flex;align-items:center;gap:10px;}
-.cfp{padding:4px 12px;border-radius:20px;font-size:.72rem;font-weight:800;flex-shrink:0;}
+/* ── CONFIRM MODAL (full overlay) ── */
+.cfm{display:none;position:fixed;inset:0;z-index:300;align-items:flex-end;justify-content:center;background:rgba(0,0,0,.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);}
+.cfm.on{display:flex;animation:cfmIn .22s ease;}
+@keyframes cfmIn{from{opacity:0}to{opacity:1}}
+.cfmbox{background:#111827;border:1px solid var(--gb);border-radius:24px 24px 0 0;width:100%;max-width:540px;max-height:92vh;overflow-y:auto;animation:shup .25s cubic-bezier(.4,0,.2,1);}
+.cfmbox::-webkit-scrollbar{display:none;}
+.cfmhandle{width:40px;height:4px;border-radius:2px;background:var(--gb);margin:12px auto 0;}
+.cfh{padding:14px 18px 12px;border-bottom:1px solid var(--gb);display:flex;align-items:center;gap:10px;}
+.cfp{padding:5px 13px;border-radius:20px;font-size:.72rem;font-weight:800;flex-shrink:0;}
 .cfp.i{background:var(--ig);color:var(--inc);}
 .cfp.e{background:var(--eg);color:var(--exp);}
-.cfn{font-size:.92rem;font-weight:700;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.cfa{font-family:'JetBrains Mono',monospace;font-size:1.05rem;font-weight:700;flex-shrink:0;}
+.cfn{font-size:.95rem;font-weight:800;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.cfa{font-family:'JetBrains Mono',monospace;font-size:1.1rem;font-weight:700;flex-shrink:0;}
 .cfa.i{color:var(--inc);}
 .cfa.e{color:var(--exp);}
-.cfcr{display:flex;gap:8px;align-items:center;padding:10px 16px;border-top:1px solid var(--gb);}
-.cfcl{font-size:.75rem;color:var(--t2);flex-shrink:0;}
-.cfcs{flex:1;background:rgba(255,255,255,.06);border:1.5px solid var(--gb);border-radius:var(--rs);padding:8px 12px;color:var(--t1);font-family:'Noto Sans Thai',sans-serif;font-size:.82rem;}
-.cfcs:focus{outline:none;border-color:var(--acc);}
-.cfb{padding:12px 16px;font-size:.8rem;color:var(--t2);line-height:1.8;}
-.cftbl{width:100%;border-collapse:collapse;margin:5px 0;}
-.cftbl td{padding:4px;border-bottom:1px solid var(--gb);}
+/* รายการสินค้า */
+.cfb{padding:0 18px 4px;font-size:.8rem;color:var(--t2);line-height:1.8;}
+.cftbl{width:100%;border-collapse:collapse;margin:6px 0;}
+.cftbl th{padding:5px 4px;font-size:.68rem;color:var(--t3);text-align:left;border-bottom:1px solid var(--gb);letter-spacing:.5px;}
+.cftbl th:last-child{text-align:right;}
+.cftbl td{padding:6px 4px;border-bottom:1px solid rgba(255,255,255,.04);font-size:.8rem;}
 .cftbl td:last-child{text-align:right;font-family:'JetBrains Mono',monospace;color:var(--t1);font-weight:600;}
-.cfac{display:flex;gap:10px;padding:12px 16px;border-top:1px solid var(--gb);}
-.cfbtn{flex:1;padding:12px;border:none;border-radius:var(--rs);font-family:'Noto Sans Thai',sans-serif;font-size:.87rem;font-weight:800;cursor:pointer;}
+.cftotal{display:flex;justify-content:space-between;align-items:center;padding:10px 18px;background:rgba(255,255,255,.03);border-top:1.5px solid var(--gb);border-bottom:1px solid var(--gb);}
+.cftotallbl{font-size:.78rem;color:var(--t2);font-weight:700;text-transform:uppercase;letter-spacing:1px;}
+.cftotalamt{font-family:'JetBrains Mono',monospace;font-size:1.25rem;font-weight:700;}
+.cftotalamt.i{color:var(--inc);}
+.cftotalamt.e{color:var(--exp);}
+/* edit fields */
+.cfedit{display:flex;flex-direction:column;gap:10px;padding:14px 18px;border-bottom:1px solid var(--gb);}
+.cferow{display:flex;align-items:center;gap:10px;}
+.cfelbl{font-size:.72rem;color:var(--t2);width:58px;flex-shrink:0;}
+.cfeinp{flex:1;background:rgba(255,255,255,.06);border:1.5px solid var(--gb);border-radius:var(--rs);padding:9px 13px;color:var(--t1);font-family:'Noto Sans Thai',sans-serif;font-size:.9rem;}
+.cfeinp:focus{outline:none;border-color:var(--acc);box-shadow:0 0 0 2px var(--ag);}
+.cfetype{display:flex;gap:6px;}
+.cfetbtn{flex:1;padding:8px;border-radius:8px;border:1.5px solid var(--gb);background:transparent;color:var(--t2);font-family:'Noto Sans Thai',sans-serif;font-size:.8rem;font-weight:700;cursor:pointer;transition:all .15s;}
+.cfetbtn.inc.on{background:var(--ig);border-color:var(--inc);color:var(--inc);}
+.cfetbtn.exp.on{background:var(--eg);border-color:var(--exp);color:var(--exp);}
+.cfcr{display:flex;gap:8px;align-items:center;padding:10px 18px;border-bottom:1px solid var(--gb);}
+.cfcl{font-size:.72rem;color:var(--t2);flex-shrink:0;}
+.cfcs{flex:1;background:rgba(255,255,255,.06);border:1.5px solid var(--gb);border-radius:var(--rs);padding:9px 13px;color:var(--t1);font-family:'Noto Sans Thai',sans-serif;font-size:.85rem;}
+.cfcs:focus{outline:none;border-color:var(--acc);}
+.cfac{display:flex;gap:10px;padding:14px 18px calc(18px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--gb);}
+.cfbtn{flex:1;padding:14px;border:none;border-radius:var(--rs);font-family:'Noto Sans Thai',sans-serif;font-size:.9rem;font-weight:800;cursor:pointer;transition:all .15s;}
 .cfbtn.sv{background:linear-gradient(135deg,var(--inc),var(--inc2));color:#000;}
+.cfbtn.sv:active{transform:scale(.97);}
 .cfbtn.cl{background:rgba(255,255,255,.06);border:1.5px solid var(--gb);color:var(--t2);}
+/* saving state */
+.cfbtn.sv.loading{background:rgba(0,229,160,.2);color:var(--inc);pointer-events:none;}
+/* ── SUCCESS POP UP ── */
+.succ{display:none;position:fixed;inset:0;z-index:500;align-items:center;justify-content:center;background:rgba(0,0,0,.6);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);}
+.succ.on{display:flex;animation:cfmIn .2s ease;}
+.succbox{background:#0f1f14;border:1.5px solid var(--ig);border-radius:24px;padding:32px 28px;text-align:center;width:88%;max-width:340px;animation:succPop .35s cubic-bezier(.34,1.56,.64,1);}
+@keyframes succPop{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:scale(1)}}
+.succico{font-size:3.5rem;margin-bottom:12px;display:block;}
+.succtit{font-size:1.2rem;font-weight:900;color:var(--inc);margin-bottom:6px;}
+.succamp{font-family:'JetBrains Mono',monospace;font-size:1.8rem;font-weight:700;color:#fff;margin-bottom:4px;}
+.succcat{font-size:.78rem;color:var(--t2);margin-bottom:18px;}
+.succbars{display:flex;flex-direction:column;gap:6px;margin-bottom:20px;}
+.succbar{display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,.05);border-radius:8px;padding:8px 13px;}
+.succbarlbl{font-size:.75rem;color:var(--t2);}
+.succbarval{font-size:.78rem;font-weight:700;color:var(--t1);}
+.succbarval.drive{color:var(--acc);}
+.succbarval.sheet{color:var(--inc);}
+.succcta{width:100%;padding:13px;border:none;border-radius:12px;background:linear-gradient(135deg,var(--inc),var(--inc2));color:#000;font-family:'Noto Sans Thai',sans-serif;font-weight:900;font-size:.95rem;cursor:pointer;}
 /* SYNC NOTICE */
 .sn{padding:10px 14px;border-radius:var(--rs);margin-bottom:12px;font-size:.78rem;display:none;align-items:center;gap:8px;}
 .sn.on{display:flex;}
@@ -346,34 +387,44 @@ input[type=file]{display:none;}
         <span>&#x1F4E4; &#x0E01;&#x0E33;&#x0E25;&#x0E31;&#x0E07;&#x0E2D;&#x0E31;&#x0E1B;&#x0E42;&#x0E2B;&#x0E25;&#x0E14;&#x0E23;&#x0E39;&#x0E1B;&#x0E44;&#x0E1B; Drive...</span>
         <div class="upp"><div class="upf" id="upf" style="width:0%"></div></div>
       </div>
-      <div class="cfm" id="cfm">
-        <div class="cfh">
-          <span class="cfp" id="cfp">รายจ่าย</span>
-          <span class="cfn" id="cfn">—</span>
-          <span class="cfa" id="cfa">฿0</span>
-        </div>
-        <div class="cfedit">
-          <div class="cferow">
-            <span class="cfelbl">ประเภท</span>
-            <div class="cfetype">
-              <button class="cfetbtn inc" id="cfebtn_inc" onclick="setCfType('inc')">+ รายรับ</button>
-              <button class="cfetbtn exp" id="cfebtn_exp" onclick="setCfType('exp')">- รายจ่าย</button>
+      <div class="cfm" id="cfm" onclick="if(event.target===this)dismissConfirm()">
+        <div class="cfmbox">
+          <div class="cfmhandle"></div>
+          <div class="cfh">
+            <span class="cfp" id="cfp">รายจ่าย</span>
+            <span class="cfn" id="cfn">—</span>
+            <span class="cfa" id="cfa">฿0</span>
+          </div>
+          <!-- รายการสินค้าจากใบเสร็จ -->
+          <div class="cfb" id="cfb"></div>
+          <!-- ยอดรวม -->
+          <div class="cftotal" id="cftotalrow" style="display:none">
+            <span class="cftotallbl">ยอดรวม</span>
+            <span class="cftotalamt" id="cftotalamt">฿0</span>
+          </div>
+          <!-- แก้ไขข้อมูล -->
+          <div class="cfedit">
+            <div class="cferow">
+              <span class="cfelbl">ประเภท</span>
+              <div class="cfetype">
+                <button class="cfetbtn inc" id="cfebtn_inc" onclick="setCfType('inc')">+ รายรับ</button>
+                <button class="cfetbtn exp" id="cfebtn_exp" onclick="setCfType('exp')">− รายจ่าย</button>
+              </div>
+            </div>
+            <div class="cferow">
+              <span class="cfelbl">ชื่อ</span>
+              <input class="cfeinp" id="cfename" type="text" placeholder="ชื่อรายการ" oninput="syncCfHeader()">
+            </div>
+            <div class="cferow">
+              <span class="cfelbl">ยอด (฿)</span>
+              <input class="cfeinp" id="cfeamt" type="number" placeholder="0.00" inputmode="decimal" oninput="syncCfHeader()">
             </div>
           </div>
-          <div class="cferow">
-            <span class="cfelbl">ชื่อ</span>
-            <input class="cfeinp" id="cfename" type="text" placeholder="ชื่อรายการ">
+          <div class="cfcr"><span class="cfcl">หมวดหมู่:</span><select class="cfcs" id="cfcat"></select></div>
+          <div class="cfac">
+            <button class="cfbtn cl" onclick="dismissConfirm()">✕ ยกเลิก</button>
+            <button class="cfbtn sv" id="cfbtnSave" onclick="saveRecord()">✓ บันทึก + Sync</button>
           </div>
-          <div class="cferow">
-            <span class="cfelbl">ยอด (฿)</span>
-            <input class="cfeinp" id="cfeamt" type="number" placeholder="0.00" inputmode="decimal">
-          </div>
-        </div>
-        <div class="cfcr"><span class="cfcl">หมวดหมู่:</span><select class="cfcs" id="cfcat"></select></div>
-        <div class="cfb" id="cfb"></div>
-        <div class="cfac">
-          <button class="cfbtn cl" onclick="dismissConfirm()">✕ ยกเลิก</button>
-          <button class="cfbtn sv" onclick="saveRecord()">✓ บันทึก + Sync</button>
         </div>
       </div>
     </div>
@@ -489,6 +540,17 @@ input[type=file]{display:none;}
     <button class="sdanger" onclick="resetAll()">&#x26A0;&#xFE0F; &#x0E25;&#x0E49;&#x0E32;&#x0E07;&#x0E02;&#x0E49;&#x0E2D;&#x0E21;&#x0E39;&#x0E25;&#x0E43;&#x0E19;&#x0E40;&#x0E04;&#x0E23;&#x0E37;&#x0E48;&#x0E2D;&#x0E07;</button>
   </div>
 </div>
+<!-- SUCCESS POPUP -->
+<div class="succ" id="succPop" onclick="closeSucc()">
+  <div class="succbox" onclick="event.stopPropagation()">
+    <span class="succico" id="succIco">✅</span>
+    <div class="succtit" id="succTit">บันทึกสำเร็จ!</div>
+    <div class="succamp" id="succAmt">฿0.00</div>
+    <div class="succcat" id="succCat">—</div>
+    <div class="succbars" id="succBars"></div>
+    <button class="succcta" onclick="closeSucc()">✓ ปิด</button>
+  </div>
+</div>
 <div class="toast" id="toast"></div>
 <input type="file" id="fi" accept="image/*" onchange="onFile(event)">
 <input type="file" id="ci2" accept="image/*" capture="environment" onchange="onFile(event)">
@@ -500,7 +562,7 @@ input[type=file]{display:none;}
 </script>
 <script>
 // ★ แก้เฉพาะ 2 บรรทัดนี้
-const SCRIPT_URL='https://script.google.com/macros/s/AKfycbxOfszHA2SOdKP6UfmEBte7URV1_ioSo3QpAnIzIEpU76LTcT_I5od-Mj708-Uzubtueg/exec';
+const SCRIPT_URL='https://script.google.com/macros/s/AKfycby7Y9SNdhrz3lHeqIAaF1NA8zD4EbsJ5QAlHZ1XFxdgPDTJyZtRbamYi5O4KLod1Tj_Sg/exec';
 const SHEET_URL='https://docs.google.com/spreadsheets/d/1KtbdZsOn5VlaFhCo0Gg_xh97IR-UbTA6aY9sUyRtbOU/edit';
 
 let recs=JSON.parse(localStorage.getItem('bc_recs')||'[]');
@@ -517,45 +579,67 @@ let fil='all',pend=null,curImg=null,camStream=null,recog=null,vtxt='',detId=null
   const bl=document.getElementById('bizNameLbl');
   if(bl)bl.textContent=cfg.bizName||'';
 
-  // โหลด Sheets ใน background พร้อม timeout 5 วิ
   function fetchTimeout(url,ms){
     return Promise.race([
       fetch(url),
       new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')),ms))
     ]);
   }
+
+  // โหลด config จาก Sheets
   setSyncUI('syncing');
   try{
     const r=await fetchTimeout(SCRIPT_URL+'?action=config',12000);
     const d=await r.json();
-    if(d.ok&&d.config){cfg={...cfg,...d.config};localStorage.setItem('bc_cfg',JSON.stringify(cfg));
+    if(d.ok&&d.config&&Object.keys(d.config).length){
+      cfg={...cfg,...d.config};
+      localStorage.setItem('bc_cfg',JSON.stringify(cfg));
       const bl=document.getElementById('bizNameLbl');if(bl)bl.textContent=cfg.bizName||'';
     }
-  }catch(e){} // ไม่แสดง error ถ้าแค่ config โหลดไม่ได้
+  }catch(e){}
+
+  // โหลด records จาก Sheets (ถ้า Sheets มีมากกว่าในเครื่อง หรือเครื่องว่าง)
   try{
-    const r=await fetchTimeout(SCRIPT_URL+'?action=records',15000);
-    const d=await r.json();
+    const r=await fetchTimeout(SCRIPT_URL+'?action=records',18000);
+    const text=await r.text();
+    let d;
+    try{d=JSON.parse(text);}catch(ex){throw new Error('Apps Script response ไม่ใช่ JSON — Deploy ใหม่');}
     if(d.ok&&Array.isArray(d.records)&&d.records.length){
-      recs=d.records
-        .filter(r=>r.id&&(r.name||r.amount>0)) // กรองรายการเสียออก
-        .map(r=>({...r,
+      const sheetRecs=d.records
+        .filter(r=>r.id&&(r.name||r.amount>0))
+        .map(r=>({
+          ...r,
           type:(r.type==='inc'||r.type==='รายรับ'||String(r.type).includes('รับ'))?'inc':'exp',
           amount:parseFloat(r.amount)||0,
           synced:true,
           date:parseDate(r.date).toISOString()
         }));
+      // Merge: ถ้ามี record จาก Sheets ที่ไม่มีในเครื่อง ให้เพิ่ม
+      // ถ้า Sheets มีมากกว่า ใช้ Sheets เป็นหลัก
+      if(sheetRecs.length>=recs.length){
+        // ใช้ Sheets + เก็บ local ที่ยังไม่ sync
+        const localUnsynced=recs.filter(r=>!r.synced);
+        const sheetIds=new Set(sheetRecs.map(r=>r.id));
+        const newLocal=localUnsynced.filter(r=>!sheetIds.has(r.id));
+        recs=[...sheetRecs,...newLocal];
+      } else {
+        // Local มีมากกว่า — mark sheet records as synced
+        const sheetIds=new Set(sheetRecs.map(r=>r.id));
+        recs=recs.map(r=>sheetIds.has(r.id)?{...r,synced:true}:r);
+      }
       localStorage.setItem('bc_recs',JSON.stringify(recs));
       updStats();renderRecs();
     }
     setSyncUI('ok');
   }catch(e){
-    // ถ้าเน็ตไม่มีเลย = ออฟไลน์ / ถ้ามีเน็ตแต่ error = sync error
     setSyncUI(navigator.onLine?'err':'offline');
   }
+
   document.addEventListener('dragover',e=>e.preventDefault());
   document.addEventListener('drop',e=>{e.preventDefault();const f=e.dataTransfer.files[0];if(f?.type.startsWith('image/'))readImg(f);});
   document.addEventListener('paste',e=>{for(const it of e.clipboardData.items)if(it.type.startsWith('image/')){e.preventDefault();readImg(it.getAsFile());return;}});
   document.getElementById('ta')?.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendText();}});
+
   // ตรวจสอบ clipboard รูปภาพอัตโนมัติเมื่อกลับมาที่แอป
   document.addEventListener('visibilitychange',async()=>{
     if(document.visibilityState==='visible'&&!curImg){
@@ -571,6 +655,7 @@ let fil='all',pend=null,curImg=null,camStream=null,recog=null,vtxt='',detId=null
       }catch(_){}
     }
   });
+
   // รับรูปจาก Web Share (แชร์รูปจากแอปอื่นเข้ามา)
   if(navigator.serviceWorker){
     navigator.serviceWorker.addEventListener('message',e=>{
@@ -683,29 +768,58 @@ function closeVoice(){if(recog){try{recog.stop();}catch(_){}recog=null;}vtxt='';
 
 // GEMINI (ผ่าน Apps Script Proxy — ไม่มี API Key ใน HTML)
 async function callG(b64, prompt){
-  const parts = [{text: prompt}];
-  if(b64) parts.unshift({inline_data:{mime_type:'image/jpeg', data:b64}});
-  const r = await fetch(SCRIPT_URL, {
-    method:'POST', redirect:'follow',
-    headers:{'Content-Type':'text/plain'},
-    body: JSON.stringify({
-      action:'gemini',
-      contents:[{parts}]
-    })
-  });
-  if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error((e?.error||'HTTP '+r.status).toString().slice(0,100));}
-  const d = await r.json();
-  if(d.ok===false) throw new Error(d.error||'Gemini error');
-  // parse Gemini response — รองรับทั้ง candidates format และ direct JSON
-  let txt='';
-  if(d.candidates) txt=(d.candidates[0]?.content?.parts?.[0]?.text||'');
-  else txt=typeof d==='string'?d:JSON.stringify(d);
-  txt=txt.replace(/```json|```/g,'').trim();
-  if(!txt) throw new Error('Gemini ไม่ตอบกลับ — เช็ค GEMINI_API_KEY ใน Script Properties');
-  try{return JSON.parse(txt);}catch(ex){
-    const m=txt.match(/\{[\s\S]*\}|\[[\s\S]*\]/);
-    if(m){try{return JSON.parse(m[0]);}catch{}}
-    throw new Error('Parse ไม่ได้: '+txt.slice(0,100));
+  // สร้าง parts: ถ้ามีรูปให้ส่งรูปก่อน แล้วตามด้วย prompt
+  const parts = [];
+  if(b64) parts.push({inline_data:{mime_type:'image/jpeg', data:b64}});
+  parts.push({text: prompt});
+
+  let rawText='';
+  try{
+    const r = await fetch(SCRIPT_URL, {
+      method:'POST', redirect:'follow',
+      headers:{'Content-Type':'text/plain'},
+      body: JSON.stringify({
+        action:'gemini',
+        contents:[{parts}]
+      })
+    });
+
+    // รับ response text ก่อน แล้วค่อย parse
+    rawText = await r.text();
+    const d = JSON.parse(rawText);
+
+    // Apps Script ส่ง {ok:false, error:...} เมื่อเกิดข้อผิดพลาด
+    if(d.ok===false) throw new Error(d.error||'Gemini proxy error');
+
+    // Gemini ส่ง {candidates:[{content:{parts:[{text:'...'}]}}]}
+    let txt='';
+    if(d.candidates && d.candidates.length>0){
+      txt = d.candidates[0]?.content?.parts?.[0]?.text || '';
+    } else if(d.error){
+      // Gemini API error object
+      throw new Error('Gemini API: '+(d.error.message||JSON.stringify(d.error)));
+    } else {
+      throw new Error('ไม่พบ candidates ใน response');
+    }
+
+    // ทำความสะอาด: ลบ markdown code block ออก
+    txt = txt.replace(/```json\s*/gi,'').replace(/```\s*/g,'').trim();
+    if(!txt) throw new Error('Gemini ตอบกลับว่าง — เช็ค GEMINI_API_KEY ใน Script Properties');
+
+    // แปลง JSON
+    try{ return JSON.parse(txt); }
+    catch(ex){
+      // ลองหา JSON block ในข้อความ
+      const m = txt.match(/\{[\s\S]*\}|\[[\s\S]*\]/);
+      if(m){ try{ return JSON.parse(m[0]); }catch{} }
+      throw new Error('AI ตอบไม่ใช่ JSON: '+txt.slice(0,120));
+    }
+  } catch(ex){
+    // ถ้าเป็น SyntaxError จาก parse rawText (เช่น Apps Script redirect HTML)
+    if(ex instanceof SyntaxError){
+      throw new Error('Apps Script ส่ง response ผิดรูปแบบ — Deploy ใหม่แบบ Anyone หรือเปิด Sync');
+    }
+    throw ex;
   }
 }
 async function sendText(){
@@ -737,48 +851,87 @@ async function analyzeImg(b64){
   document.getElementById('hero').classList.add('sc');
   setAI(true,'🤖 AI กำลังอ่านรูปภาพ...');
   try{
-    const r=await callG(b64,`คุณคือผู้เชี่ยวชาญอ่านเอกสารการเงินของธุรกิจ SME ไทย
-ข้อมูลธุรกิจ: ขาย Beauty Products (ครีม, เซรั่ม, สกินแคร์, เครื่องสำอาง, ผลิตภัณฑ์ความงาม) และเสื้อผ้าแฟชั่น ซื้อสินค้าจากซัพพลายเออร์ไทยและส่งออกต่างประเทศ
-หมวดหมู่ที่ใช้บ่อย: วัตถุดิบ=ซื้อสินค้า Beauty/เสื้อผ้า, ค่าขนส่ง=DHL/Kerry/ไปรษณีย์, ขายสินค้า=รายรับจากลูกค้า
-วิเคราะห์รูปนี้แล้วตอบ JSON เท่านั้น ห้าม backtick หรือข้อความอื่นนอกจาก JSON
+    const r=await callG(b64,`คุณคือผู้เชี่ยวชาญอ่านเอกสารการเงินของธุรกิจ SME ไทย (ร้าน k&r Thailand Shop)
+ธุรกิจ: ขาย Beauty Products (ครีม, เซรั่ม, สกินแคร์, เครื่องสำอาง) และเสื้อผ้าแฟชั่น ซื้อสินค้าจากซัพพลายเออร์ไทยและส่งออกต่างประเทศ
 
-รูปที่อาจพบและวิธีอ่าน:
-1. สลิปโอนเงินธนาคาร (SCB/กสิกร/กรุงไทย/PromptPay) → หาคำว่า "จำนวนเงิน" หรือ "Amount" แล้วใช้ตัวเลขนั้น ถ้าเป็นการรับโอน = income ถ้าเป็นการโอนออก = expense
-2. ใบเสร็จร้านค้า / ใบกำกับภาษี → หายอด Total / ยอดรวม / ยอดชำระ / Grand Total / ทั้งหมด
-3. กระดาษเขียนมือ เช่น "10x95=950" → คำนวณแล้วใช้ผลลัพธ์ 950
-4. แชท Line/WhatsApp → ดึงตัวเลขยอดรวมที่ระบุในข้อความ
-5. ใบเสร็จขนส่ง DHL/Kerry/Flash → หายอด Total หรือ Payment Received
+== ขั้นตอนการอ่าน (ทำตามลำดับ) ==
+STEP 1: จำแนกประเภทเอกสาร
+- สลิปโอนเงิน (มีคำว่า "โอนเงิน" / "PromptPay" / "จำนวนเงิน" / "Amount")
+- ใบเสร็จร้านค้า / ใบกำกับภาษี (มีรายการสินค้า + ยอดรวม)
+- กระดาษบันทึกมือ (ตัวเลข + สูตรคำนวณ)
+- แชทสั่งของ / สกรีนช็อต Line (ข้อความสั่งซื้อ ราคา)
+- ใบส่งของ / ขนส่ง DHL, Kerry, Flash, ไปรษณีย์
 
-กฎสำคัญ:
-- ห้ามใส่ amount เป็น 0 ถ้าเห็นตัวเลขในรูป
-- สลิปโอนเงิน "จำนวนเงิน 18,900" → amount = 18900
-- ถ้าไม่แน่ใจ income/expense ให้ดูว่า "จ่ายออก" = expense, "รับเข้า" = income
-- ชื่อ name ให้ใช้ชื่อร้าน/ธนาคาร/คู่โอน ไม่ใช่ "ไม่ทราบ"
-- บิลคาร์บอน/ใบเสร็จสะดวกซื้อ: คำว่า "Total" อาจเป็นราคาสินค้าชิ้นสุดท้าย ไม่ใช่ยอดรวม ให้ดู CASH/เงินสด - Change/เงินทอน = ยอดจริง เช่น CASH=85, Change=4 → ยอดจริง=81
-- ถ้าเห็นทั้ง Total และ CASH/Change ให้คำนวณ CASH - Change ก่อนเสมอ
+STEP 2: หายอดรวมที่แม่นยำที่สุด
+- ใบเสร็จ: ลำดับความสำคัญ → "ยอดรวม" > "ยอดชำระ" > "Grand Total" > "Total" > "รวมทั้งสิ้น"
+- สลิปธนาคาร: ใช้ตัวเลขหลัง "จำนวนเงิน" หรือ "Amount" เท่านั้น
+- บิลสะดวกซื้อ/ปั๊ม: ถ้าเห็น CASH และ Change → ยอดจริง = CASH − Change (เช่น CASH=100, Change=18.50 → ยอด=81.50)
+- กระดาษมือ: คำนวณสูตรให้ครบ เช่น "10x95=950, 5x200=1000 → รวม 1950"
+- ถ้าเห็นหลายยอด ให้เลือกยอดที่ใหญ่ที่สุดและสมเหตุสมผล (ยอดรวม ไม่ใช่ราคาต่อชิ้น)
 
-รูปแบบ JSON:
-{"type":"inc หรือ exp เท่านั้น","name":"ชื่อร้านหรือคู่โอน","amount":ตัวเลขไม่มีลูกน้ำ,"category":"หมวดหมู่","note":"รายละเอียด","items":[{"name":"ชื่อสินค้า","qty":1,"price":0}],"source":"receipt"}
+STEP 3: ดึงรายการสินค้า (items)
+- ดึงทุกรายการที่เห็น ระบุ ชื่อ, จำนวน(qty), ราคาต่อหน่วย(price)
+- ถ้าไม่เห็นแยกรายการ items=[]
+- ผลรวมของ items.qty×items.price ควรเท่ากับ amount
 
-หมวดหมู่รายจ่าย: วัตถุดิบ/สินค้า, ค่าขนส่ง, ค่าแพ็คของ, ค่าโฆษณา, ค่าน้ำไฟ, เงินเดือน, อื่นๆ | หมวดหมู่รายรับ: ขายสินค้า Beauty, ขายเสื้อผ้า, ขายส่ง, อื่นๆ`);
-    document.getElementById('hero').classList.remove('sc');setAI(false);showCfm(r,b64);
-  }catch(e){document.getElementById('hero').classList.remove('sc');setAI(false);toast('❌ '+e.message);}
+STEP 4: กำหนด type (inc/exp)
+- สลิปโอนออก / จ่ายค่าสินค้า / ค่าส่ง / ค่าใช้จ่าย → "exp"
+- สลิปรับโอน / ยอดขาย / ลูกค้าโอนมา → "inc"
+- ถ้าไม่แน่ใจ → ดูทิศทาง "จ่าย" = exp, "รับ" = inc
+
+STEP 5: ตั้งชื่อ (name)
+- ใช้ชื่อร้าน / ชื่อธนาคาร / ชื่อบริษัท / ชื่อคู่โอน จากในรูป
+- ห้ามใช้ "ไม่ทราบ" หรือ "ไม่ระบุ" — ให้ใช้ประเภทเอกสารแทน เช่น "ใบเสร็จซื้อของ"
+
+== กฎเหล็ก ==
+- amount ต้องไม่เป็น 0 ถ้าเห็นตัวเลขในรูป
+- amount เป็นตัวเลขล้วน ห้ามใส่ลูกน้ำหรือสัญลักษณ์
+- ตอบ JSON เท่านั้น ห้าม backtick ห้ามข้อความนอก JSON
+
+== รูปแบบ JSON ที่ต้องการ ==
+{
+  "type": "inc หรือ exp",
+  "name": "ชื่อร้าน/คู่โอน/ประเภท",
+  "amount": ตัวเลข,
+  "category": "หมวดหมู่",
+  "note": "รายละเอียดสั้นๆ เช่น เลขที่ใบเสร็จ / วันที่ / ธนาคาร",
+  "doc_type": "slip | receipt | handwritten | chat | shipping | other",
+  "items": [{"name":"ชื่อสินค้า","qty":1,"price":0}],
+  "source": "receipt"
+}
+หมวดหมู่รายจ่าย: วัตถุดิบ/สินค้า | ค่าขนส่ง | ค่าแพ็คของ | ค่าโฆษณา | ค่าน้ำไฟ | เงินเดือน | อื่นๆ
+หมวดหมู่รายรับ: ขายสินค้า Beauty | ขายเสื้อผ้า | ขายส่ง | อื่นๆ`);
+    document.getElementById('hero').classList.remove('sc');
+    setAI(false);
+    showCfm(r,b64);
+  }catch(e){
+    document.getElementById('hero').classList.remove('sc');
+    setAI(false);
+    toast('❌ '+e.message);
+  }
 }
 
 // CONFIRM
+function syncCfHeader(){
+  // sync ชื่อและยอดที่แก้ไขขึ้นไป header ทันที
+  const n=document.getElementById('cfename').value.trim();
+  const a=parseFloat(document.getElementById('cfeamt').value)||0;
+  if(n) document.getElementById('cfn').textContent=n;
+  if(a>0){
+    document.getElementById('cfa').textContent='฿'+fmt(a);
+    document.getElementById('cftotalamt').textContent='฿'+fmt(a);
+  }
+}
 function setCfType(t){
-  // บันทึก type ลงใน global variable ที่แน่นอน
   window._cfType=t;
-  if(pend&&pend.entries)pend.entries[0].type=t;
-  const ip=document.getElementById('cfebtn_inc'),ep=document.getElementById('cfebtn_exp');
-  const cfp=document.getElementById('cfp');
-  // ใช้ setAttribute เพื่อความแน่นอน
-  ip.setAttribute('class','cfetbtn inc'+(t==='inc'?' on':''));
-  ep.setAttribute('class','cfetbtn exp'+(t==='exp'?' on':''));
-  cfp.setAttribute('class','cfp '+(t==='inc'?'i':'e'));
-  cfp.textContent=t==='inc'?'+ รายรับ':'- รายจ่าย';
+  if(pend&&pend.entries) pend.entries[0].type=t;
+  document.getElementById('cfebtn_inc').setAttribute('class','cfetbtn inc'+(t==='inc'?' on':''));
+  document.getElementById('cfebtn_exp').setAttribute('class','cfetbtn exp'+(t==='exp'?' on':''));
+  document.getElementById('cfp').setAttribute('class','cfp '+(t==='inc'?'i':'e'));
+  document.getElementById('cfp').textContent=t==='inc'?'+ รายรับ':'− รายจ่าย';
   document.getElementById('cfa').setAttribute('class','cfa '+(t==='inc'?'i':'e'));
-  // อัปเดต dropdown หมวดหมู่ตามประเภท
+  document.getElementById('cftotalamt').setAttribute('class','cftotalamt '+(t==='inc'?'i':'e'));
+  // อัปเดต dropdown หมวดหมู่
   const cats=t==='inc'?cfg.incomeCategories:cfg.expenseCategories;
   const sel=document.getElementById('cfcat');
   if(sel&&cats){
@@ -787,85 +940,167 @@ function setCfType(t){
   }
 }
 function showCfm(data,b64){
-  const entries=Array.isArray(data)?data:[data],m=entries[0];
+  const entries=Array.isArray(data)?data:[data];
+  const m=entries[0];
+
   // normalize type
-  // normalize type จาก Gemini ที่อาจตอบ income/expense/inc/exp/รายรับ/รายจ่าย
   const _t=String(m.type||'').toLowerCase();
   m.type=(_t==='inc'||_t==='income'||_t==='รายรับ'||_t.includes('รับ')||_t.includes('income'))?'inc':'exp';
-  window._cfType=m.type; // reset ทุกครั้งที่เปิด confirm ใหม่
-  pend={entries,imgB64:b64||curImg};
+  window._cfType=m.type;
+  pend={entries, imgB64:b64||curImg};
+
   const isI=m.type==='inc';
-  document.getElementById('cfp').textContent=isI?'+ รายรับ':'- รายจ่าย';
+  const amt=parseFloat(m.amount)||0;
+
+  // header
+  document.getElementById('cfp').textContent=isI?'+ รายรับ':'− รายจ่าย';
   document.getElementById('cfp').className='cfp '+(isI?'i':'e');
   document.getElementById('cfn').textContent=m.name||'?';
-  document.getElementById('cfa').textContent='฿'+fmt(m.amount);
+  document.getElementById('cfa').textContent='฿'+fmt(amt);
   document.getElementById('cfa').className='cfa '+(isI?'i':'e');
-  // populate edit fields
+
+  // edit fields
   document.getElementById('cfename').value=m.name||'';
-  document.getElementById('cfeamt').value=m.amount||'';
+  document.getElementById('cfeamt').value=amt||'';
   setCfType(m.type);
+
+  // items table
+  let html='';
+  const items=(m.items||[]).filter(it=>it.name||it.price);
+  if(items.length){
+    html+=`<table class="cftbl">
+      <thead><tr><th>รายการ</th><th>จำนวน</th><th>ราคา/หน่วย</th><th>รวม</th></tr></thead><tbody>`;
+    items.forEach(it=>{
+      const qty=it.qty||1, price=parseFloat(it.price)||0;
+      html+=`<tr>
+        <td>${it.name||'—'}</td>
+        <td style="color:var(--t2);text-align:center">${qty}</td>
+        <td style="text-align:right;color:var(--t2)">฿${fmt(price)}</td>
+        <td>฿${fmt(qty*price)}</td>
+      </tr>`;
+    });
+    html+=`</tbody></table>`;
+  }
+  if(entries.length>1) html+=`<div style="padding:6px 0;font-size:.78rem;color:var(--gold)">⚡ พบ ${entries.length} รายการ</div>`;
+  if(m.note) html+=`<div style="opacity:.7;margin-top:4px;font-size:.75rem;color:var(--t2)">📝 ${m.note.slice(0,120)}</div>`;
+  // doc_type badge
+  const docLabel={slip:'สลิปโอนเงิน',receipt:'ใบเสร็จ',handwritten:'บันทึกมือ',chat:'แชทสั่งของ',shipping:'ใบส่งของ',other:'เอกสาร'};
+  if(m.doc_type) html=`<div style="margin-bottom:8px"><span style="padding:2px 10px;border-radius:20px;background:var(--ag);color:var(--acc);font-size:.68rem;font-weight:700">📄 ${docLabel[m.doc_type]||m.doc_type}</span></div>`+html;
+  document.getElementById('cfb').innerHTML=html;
+
+  // total row
+  const tr=document.getElementById('cftotalrow');
+  document.getElementById('cftotalamt').textContent='฿'+fmt(amt);
+  document.getElementById('cftotalamt').className='cftotalamt '+(isI?'i':'e');
+  tr.style.display='flex';
+
+  // category dropdown
   const cats=isI?cfg.incomeCategories:cfg.expenseCategories;
   const sel=document.getElementById('cfcat');
   const all=[...new Set([m.category,...cats].filter(Boolean))];
   sel.innerHTML=all.map(c=>`<option value="${c}" ${c===m.category?'selected':''}>${c}</option>`).join('');
-  let html='';
-  if(m.items?.length){html+='<table class="cftbl">';m.items.forEach(it=>html+=`<tr><td>${it.name}</td><td style="color:var(--t2)">${it.qty||1}x</td><td>฿${fmt(it.price||0)}</td></tr>`);html+='</table>';}
-  if(entries.length>1)html+=`<div style="padding:6px 0;font-size:.78rem;color:var(--gold)">⚡ พบ ${entries.length} รายการ</div>`;
-  if(m.note)html+=`<div style="opacity:.7;margin-top:3px;font-size:.78rem">${m.note.slice(0,100)}</div>`;
-  document.getElementById('cfb').innerHTML=html;
+
   document.getElementById('cfm').classList.add('on');
 }
-function dismissConfirm(){document.getElementById('cfm').classList.remove('on');pend=null;}
+function dismissConfirm(){
+  document.getElementById('cfm').classList.remove('on');
+  pend=null;
+}
 
 // SAVE + UPLOAD + SYNC
 let _saving=false;
 async function saveRecord(){
   if(!pend||_saving)return;
   _saving=true;
-  const btn=document.querySelector('.cfbtn.sv');
-  if(btn){btn.disabled=true;btn.textContent='⏳ กำลังบันทึก...';}
-  // อัปเดตจาก edit fields ก่อนบันทึก
+
+  // ── Loading state บนปุ่ม ──
+  const btn=document.getElementById('cfbtnSave');
+  if(btn){btn.disabled=true;btn.classList.add('loading');btn.textContent='⏳ กำลังบันทึก...';}
+
+  // อัปเดตจาก edit fields
   const ename=document.getElementById('cfename').value.trim();
   const eamt=parseFloat(document.getElementById('cfeamt').value)||0;
-  if(ename)pend.entries[0].name=ename;
-  if(eamt>0)pend.entries[0].amount=eamt;
-  // อัปเดต display
-  document.getElementById('cfn').textContent=pend.entries[0].name;
-  document.getElementById('cfa').textContent='฿'+fmt(pend.entries[0].amount);
-  const {entries,imgB64}=pend,cat=document.getElementById('cfcat').value,now=new Date().toISOString();
-  // ดึง type จากปุ่มที่กด (สำคัญ! ไม่ใช่จาก AI)
-  // ดึง type จาก global variable ที่ setCfType เซ็ตไว้ (แน่นอนกว่า classList)
+  if(ename) pend.entries[0].name=ename;
+  if(eamt>0) pend.entries[0].amount=eamt;
+
+  const {entries,imgB64}=pend;
+  const cat=document.getElementById('cfcat').value;
+  const now=new Date().toISOString();
   const selectedType=window._cfType||pend.entries[0].type||'exp';
-  // อัปเดต type ทุก entry ให้ตรงกับที่ผู้ใช้เลือก
   entries.forEach(e=>{e.type=selectedType;});
+
+  // ── ขั้นที่ 1: อัปโหลดรูปไป Drive ──
   let imageUrl='';
-  if(imgB64){
+  if(imgB64&&syncEnabled){
+    if(btn) btn.textContent='📤 อัปโหลดรูป...';
     showUpBar(true);animUp();
     try{
-      const up=await post({action:'uploadImage',imageBase64:imgB64,mimeType:'image/jpeg',filename:`img_${Date.now()}.jpg`,date:now});
+      const up=await post({action:'uploadImage',imageBase64:imgB64,mimeType:'image/jpeg',filename:'img_'+Date.now()+'.jpg',date:now});
       showUpBar(false);
-      if(up.ok)imageUrl=up.imgUrl||'';
-      else toast('⚠️ อัปโหลดรูปไม่สำเร็จ แต่จะบันทึกต่อ');
-    }catch(e){showUpBar(false);toast('⚠️ Drive error: '+e.message);}
+      if(up.ok&&up.imgUrl) imageUrl=up.imgUrl;
+    }catch(e){showUpBar(false);}
   }
-  dismissConfirm();clearHero();setSyncUI('syncing');
+
+  if(btn) btn.textContent='☁️ Sync ไป Sheets...';
+  dismissConfirm();
+  clearHero();
+  setSyncUI('syncing');
+
+  // ── ขั้นที่ 2: บันทึกทุก entry ──
+  const savedRecs=[];
   for(const e of entries){
     const rec={
       id:Date.now()+'_'+Math.random().toString(36).slice(2,5),
       type:selectedType,
-      name:e.name||'?',amount:parseFloat(e.amount)||0,
+      name:e.name||'?',
+      amount:parseFloat(e.amount)||0,
       category:cat||e.category||'อื่นๆ',
-      note:e.note||'',items:e.items||[],raw:e.raw_text||'',
-      source:e.source||'manual',imageUrl,date:now,synced:false,
+      note:e.note||'',
+      items:e.items||[],
+      raw:e.raw_text||'',
+      source:e.source||'manual',
+      imageUrl,
+      date:now,
+      synced:false,
     };
     recs.push(rec);
-    try{const r=await post({action:'saveRecord',...rec});if(r.ok)rec.synced=true;}catch(_){}
+    savedRecs.push(rec);
+    // ── ขั้นที่ 3: Sync ไป Sheets ──
+    if(syncEnabled){
+      try{
+        const r=await post({action:'saveRecord',...rec});
+        if(r.ok) rec.synced=true;
+      }catch(_){}
+    }
   }
+
   saveLocal();
-  toast(`💾 บันทึก ${entries.length} รายการ${imageUrl?' + รูปใน Drive':''} ✅`);
-  setSyncUI(recs.every(r=>r.synced)?'ok':'err');
+  setSyncUI(recs.every(r=>r.synced)?'ok':(syncEnabled?'err':'offline'));
   _saving=false;
-  if(btn){btn.disabled=false;btn.textContent='✓ บันทึก + Sync';}
+  if(btn){btn.disabled=false;btn.classList.remove('loading');btn.textContent='✓ บันทึก + Sync';}
+
+  // ── แสดง Success Popup ──
+  showSucc(savedRecs[0], imageUrl, savedRecs[0].synced);
+}
+
+// SUCCESS POPUP
+function showSucc(rec, imageUrl, synced){
+  const isI=rec.type==='inc';
+  document.getElementById('succIco').textContent=isI?'💰':'✅';
+  document.getElementById('succTit').textContent=isI?'รับเงินแล้ว! 🎉':'บันทึกสำเร็จ! ✅';
+  document.getElementById('succAmt').textContent=(isI?'+':'-')+'฿'+fmt(rec.amount);
+  document.getElementById('succAmt').style.color=isI?'var(--inc)':'var(--exp)';
+  document.getElementById('succCat').textContent=rec.name+' · '+rec.category;
+  let bars=`
+    <div class="succbar"><span class="succbarlbl">📦 Local Storage</span><span class="succbarval" style="color:var(--inc)">✅ บันทึกแล้ว</span></div>
+    <div class="succbar"><span class="succbarlbl">☁️ Google Sheets</span><span class="succbarval ${synced?'sheet':''}">${synced?'✅ Synced แล้ว':'⏳ รอ Sync'}</span></div>
+    <div class="succbar"><span class="succbarlbl">🖼️ Google Drive</span><span class="succbarval ${imageUrl?'drive':''}">${imageUrl?'✅ อัปโหลดแล้ว':'— ไม่มีรูป'}</span></div>
+  `;
+  document.getElementById('succBars').innerHTML=bars;
+  document.getElementById('succPop').classList.add('on');
+}
+function closeSucc(){
+  document.getElementById('succPop').classList.remove('on');
 }
 
 function showUpBar(on){const b=document.getElementById('upb');on?b.classList.add('on'):b.classList.remove('on');if(!on)document.getElementById('upf').style.width='0%';}
