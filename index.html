@@ -684,19 +684,33 @@ function closeVoice(){if(recog){try{recog.stop();}catch(_){}recog=null;}vtxt='';
 // CLAUDE (ผ่าน Apps Script Proxy — ไม่มี API Key ใน HTML)
 async function callG(b64,prompt){
   const content=[];
-  if(b64)content.push({type:'image',source:{type:'base64',media_type:'image/jpeg',data:b64}});
-  content.push({type:'text',text:prompt});
-  const r=await fetch(SCRIPT_URL,{method:'POST',redirect:'follow',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'claude',model:'claude-sonnet-4-20250514',max_tokens:1500,messages:[{role:'user',content}]})});
+  if(b64) {
+    // ปรับโครงสร้างรูปภาพให้ตรงกับที่ Gemini API ต้องการ
+    content.push({ text: prompt });
+    content.push({ inline_data: { mime_type: 'image/jpeg', data: b64 } });
+  } else {
+    content.push({ text: prompt });
+  }
+
+  const r=await fetch(SCRIPT_URL,{
+    method:'POST',
+    redirect:'follow',
+    headers:{'Content-Type':'text/plain'},
+    body:JSON.stringify({
+      action:'gemini', // เปลี่ยนจุดนี้
+      contents: [{ parts: content }] // ส่งแบบโครงสร้าง Gemini
+    })
+  });
+
   if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error((e?.error?.message||'HTTP '+r.status).slice(0,100));}
   const d=await r.json();
-  // ถ้า Apps Script ส่ง error กลับมา
   if(d.ok===false){throw new Error('Proxy: '+(d.error||'unknown error'));}
-  // ถ้า Anthropic ส่ง error กลับมา
-  if(d.error){throw new Error('Claude: '+d.error.message?.slice(0,80));}
-  const txt=(d.content?.[0]?.text||'').replace(/```json[\s\S]*?```|```/g,'').trim();
-  if(!txt){throw new Error('Claude ไม่ตอบกลับ — เช็ค API Key ใน Script Properties');}
+  
+  // เปลี่ยนจุดดึงข้อความ txt ตรงนี้
+  const txt=(d.candidates?.[0]?.content?.parts?.[0]?.text||'').replace(/```json[\s\S]*?```|```/g,'').trim();
+  
+  if(!txt){throw new Error('Gemini ไม่ตอบกลับ — เช็ค API Key ใน Script Properties');}
   try{return JSON.parse(txt);}catch(ex){
-    // Claude ตอบมาแต่ไม่ใช่ JSON บริสุทธิ์ — ลองดึง JSON ออกมา
     const m=txt.match(/\{[\s\S]*\}|\[[\s\S]*\]/);
     if(m){try{return JSON.parse(m[0]);}catch{}}
     throw new Error('Parse ไม่ได้: '+txt.slice(0,100));
