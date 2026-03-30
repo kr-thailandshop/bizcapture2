@@ -1025,7 +1025,13 @@ function closeVoice(){if(recog){try{recog.stop();}catch(_){}recog=null;}vtxt='';
 // GEMINI (ผ่าน Apps Script Proxy)
 async function callG(b64, prompt){
   const provider = localStorage.getItem('bc_provider')||'gemini';
-  const apiKey   = getApiKey(provider); // ดึง key เฉพาะค่ายที่ใช้อยู่
+  const apiKey   = getApiKey(provider);
+
+  // ตรวจ key ก่อนส่ง — แจ้งเตือนชัดเจนว่า provider ไหนที่ขาด key
+  if(!apiKey){
+    const p = PROVIDERS[provider];
+    throw new Error(`ยังไม่มี API Key สำหรับ ${p?.name||provider}\nไปที่ ⚙️ ตั้งค่า → เลือก ${p?.name||provider} → ใส่ Key\nขอ Key ฟรีได้ที่: ${p?.keyLink||''}`);
+  }
 
   const parts = [];
   if(b64) parts.push({inline_data:{mime_type:'image/jpeg', data:b64}});
@@ -1040,7 +1046,7 @@ async function callG(b64, prompt){
     });
     rawText = await r.text();
     if(!rawText||rawText.trim().startsWith('<'))
-      throw new Error('Apps Script ยังไม่ได้ Deploy — Deploy ใหม่แบบ "Anyone"');
+      throw new Error('Apps Script ยังไม่ได้ Deploy — ไปที่ Apps Script → Deploy → New deployment → "Anyone"');
     let d;
     try{d=JSON.parse(rawText);}catch{throw new Error('Response ไม่ใช่ JSON: '+rawText.slice(0,100));}
     if(d.ok===false) throw new Error(d.error||'AI proxy error');
