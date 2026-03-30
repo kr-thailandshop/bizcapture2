@@ -268,6 +268,71 @@ body{font-family:'Noto Sans Thai',sans-serif;background:var(--bg);color:var(--t1
 .vattoggle.on .vatdot{background:var(--inc);box-shadow:0 0 5px var(--inc);}
 /* VAT ROW highlight */
 .taxrow.vatrow{background:rgba(0,229,160,.05);border-radius:6px;padding-left:8px;padding-right:8px;}
+/* ── MULTI-PROVIDER API CARDS ── */
+.pcard{background:rgba(255,255,255,.04);border:1.5px solid var(--gb);border-radius:14px;margin-bottom:10px;overflow:hidden;transition:border-color .2s;}
+.pcard.active{border-color:var(--acc);background:rgba(79,141,255,.07);}
+.pcard.haskey{border-color:rgba(0,229,160,.3);}
+.pcard.active.haskey{border-color:var(--acc);}
+.pchead{display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer;}
+.pcico{font-size:1.4rem;flex-shrink:0;}
+.pcinfo{flex:1;}
+.pcname{font-size:.88rem;font-weight:800;}
+.pcdesc{font-size:.67rem;color:var(--t2);margin-top:2px;line-height:1.4;}
+.pcbadge{font-size:.65rem;font-weight:700;padding:3px 9px;border-radius:20px;flex-shrink:0;}
+.pcbadge.active{background:rgba(79,141,255,.2);color:var(--acc);}
+.pcbadge.haskey{background:rgba(0,229,160,.15);color:var(--inc);}
+.pcbadge.nokey{background:rgba(255,255,255,.06);color:var(--t3);}
+.pcbody{padding:0 14px 14px;display:none;}
+.pcard.open .pcbody{display:block;}
+.pcrow{display:flex;gap:8px;margin-bottom:8px;}
+.pcinp{flex:1;background:rgba(255,255,255,.06);border:1.5px solid var(--gb);border-radius:10px;padding:10px 13px;color:var(--t1);font-family:'JetBrains Mono',monospace;font-size:.76rem;letter-spacing:.3px;}
+.pcinp:focus{outline:none;border-color:var(--acc);}
+.pcbtn{padding:10px 12px;border-radius:10px;border:none;font-family:'Noto Sans Thai',sans-serif;font-size:.76rem;font-weight:700;cursor:pointer;white-space:nowrap;transition:all .15s;}
+.pcbtn:active{transform:scale(.96);}
+.pcbtn.test{background:rgba(79,141,255,.15);border:1.5px solid rgba(79,141,255,.3);color:var(--acc);}
+.pcbtn.save{background:linear-gradient(135deg,var(--inc),var(--inc2));color:#000;}
+.pcbtn.use{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;}
+.pcbtn.del{background:rgba(255,61,107,.1);border:1.5px solid rgba(255,61,107,.2);color:var(--exp);}
+.pcstatus{font-size:.72rem;padding:7px 10px;border-radius:8px;margin-bottom:8px;}
+.pcstatus.ok{background:rgba(0,229,160,.1);color:var(--inc);}
+.pcstatus.err{background:rgba(255,61,107,.1);color:var(--exp);}
+.pcstatus.testing{background:rgba(255,187,51,.1);color:var(--gold);}
+.pclink{font-size:.7rem;color:var(--acc);text-decoration:none;display:block;margin-bottom:10px;opacity:.8;}
+.pcactions{display:flex;gap:8px;}
+.zone-row{display:flex;gap:6px;}
+.zonebtn{flex:1;padding:9px 4px;border-radius:10px;border:1.5px solid var(--gb);background:rgba(255,255,255,.03);cursor:pointer;font-family:'Noto Sans Thai',sans-serif;font-size:.75rem;font-weight:700;color:var(--t2);text-align:center;transition:all .15s;line-height:1.3;}
+.zonebtn:active{transform:scale(.96);}
+.zonebtn.biz.on{background:rgba(79,141,255,.15);border-color:var(--acc);color:var(--acc);}
+.zonebtn.per.on{background:rgba(255,187,51,.15);border-color:var(--gold);color:var(--gold);}
+.zonebtn.mix.on{background:rgba(155,109,255,.15);border-color:var(--pu);color:var(--pu);}
+.ztag{display:inline-block;padding:1px 7px;border-radius:5px;font-size:.6rem;font-weight:700;margin-left:3px;}
+.ztag.biz{background:rgba(79,141,255,.2);color:var(--acc);}
+.ztag.per{background:rgba(255,187,51,.2);color:var(--gold);}
+.ztag.mix{background:rgba(155,109,255,.2);color:var(--pu);}
+.zone-tabs{display:flex;gap:6px;margin-bottom:12px;overflow-x:auto;padding-bottom:2px;}
+.zone-tabs::-webkit-scrollbar{display:none;}
+.ztab{padding:6px 14px;border-radius:20px;border:1.5px solid var(--gb);background:var(--glass);color:var(--t2);font-size:.75rem;font-weight:700;cursor:pointer;white-space:nowrap;font-family:'Noto Sans Thai',sans-serif;flex-shrink:0;}
+.ztab.on,.ztab.all.on{background:rgba(79,141,255,.1);border-color:var(--acc);color:var(--acc);}
+.ztab.biz.on{background:rgba(79,141,255,.15);border-color:var(--acc);color:var(--acc);}
+.ztab.per.on{background:rgba(255,187,51,.15);border-color:var(--gold);color:var(--gold);}
+.ztab.mix.on{background:rgba(155,109,255,.15);border-color:var(--pu);color:var(--pu);}
+.zone-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;}
+.zscard{border-radius:12px;padding:12px 8px;text-align:center;}
+.zscard.biz{background:rgba(79,141,255,.1);border:1px solid rgba(79,141,255,.2);}
+.zscard.per{background:rgba(255,187,51,.1);border:1px solid rgba(255,187,51,.2);}
+.zscard.mix{background:rgba(155,109,255,.1);border:1px solid rgba(155,109,255,.2);}
+.zsico{font-size:1.1rem;margin-bottom:3px;}
+.zslbl{font-size:.62rem;color:var(--t2);margin-bottom:3px;font-weight:600;}
+.zsval{font-family:'JetBrains Mono',monospace;font-size:.8rem;font-weight:700;}
+.zsval.biz{color:var(--acc);}
+.zsval.per{color:var(--gold);}
+.zsval.mix{color:var(--pu);}
+.zsub{font-size:.62rem;color:var(--t3);margin-top:2px;}
+.mixpct-row{display:flex;align-items:center;gap:8px;padding:8px 0 2px;}
+.mixpct-lbl{font-size:.72rem;color:var(--t2);white-space:nowrap;}
+.mixpct-inp{width:60px;background:rgba(255,255,255,.06);border:1.5px solid var(--gb);border-radius:8px;padding:5px 8px;color:var(--t1);font-family:'JetBrains Mono',monospace;font-size:.82rem;text-align:center;}
+.mixpct-inp:focus{outline:none;border-color:var(--pu);}
+.mixpct-desc{font-size:.68rem;color:var(--t3);}
 /* API KEY INPUT */
 .apirow{display:flex;gap:8px;align-items:center;margin-bottom:8px;}
 .apiinp{flex:1;background:rgba(255,255,255,.05);border:1.5px solid var(--gb);border-radius:var(--rs);padding:11px 14px;color:var(--t1);font-family:'JetBrains Mono',monospace;font-size:.78rem;letter-spacing:.5px;}
@@ -453,6 +518,22 @@ input[type=file]{display:none;}
                 <button class="cfetbtn exp" id="cfebtn_exp" onclick="setCfType('exp')">− รายจ่าย</button>
               </div>
             </div>
+            <!-- ZONE SELECTOR -->
+            <div class="cferow">
+              <span class="cfelbl">โซน</span>
+              <div class="zone-row" style="flex:1">
+                <button class="zonebtn biz on" id="zbtn_biz" onclick="setCfZone('biz')">🏢<br>ธุรกิจ</button>
+                <button class="zonebtn per" id="zbtn_per" onclick="setCfZone('per')">🏠<br>ส่วนตัว</button>
+                <button class="zonebtn mix" id="zbtn_mix" onclick="setCfZone('mix')">🔀<br>ผสม</button>
+              </div>
+            </div>
+            <!-- Mix ratio (แสดงเฉพาะตอนเลือก mix) -->
+            <div class="mixpct-row" id="mixpct-row" style="display:none">
+              <span class="mixpct-lbl">🏢 ธุรกิจ</span>
+              <input class="mixpct-inp" id="mixpct" type="number" min="0" max="100" value="50" oninput="clampMix(this)">
+              <span class="mixpct-lbl">%</span>
+              <span class="mixpct-desc">ส่วนที่เหลือ = ส่วนตัว</span>
+            </div>
             <div class="cferow">
               <span class="cfelbl">ชื่อ</span>
               <input class="cfeinp" id="cfename" type="text" placeholder="ชื่อรายการ" oninput="syncCfHeader()">
@@ -474,11 +555,14 @@ input[type=file]{display:none;}
     <div class="view" id="v-rec">
       <div class="sw2"><span class="si">&#x1F50D;</span><input class="sinp" id="sinp" placeholder="&#x0E04;&#x0E49;&#x0E19;&#x0E2B;&#x0E32;&#x0E23;&#x0E32;&#x0E22;&#x0E01;&#x0E32;&#x0E23;..." oninput="renderRecs()"></div>
       <div class="fils">
-        <button class="fc on" onclick="setFil('all',this)">&#x0E17;&#x0E31;&#x0E49;&#x0E07;&#x0E2B;&#x0E21;&#x0E14;</button>
-        <button class="fc" onclick="setFil('inc',this)">&#x1F49A; &#x0E23;&#x0E32;&#x0E22;&#x0E23;&#x0E31;&#x0E1A;</button>
-        <button class="fc" onclick="setFil('exp',this)">&#x2764;&#xFE0F; &#x0E23;&#x0E32;&#x0E22;&#x0E08;&#x0E48;&#x0E32;&#x0E22;</button>
-        <button class="fc" onclick="setFil('img',this)">&#x1F4F7; &#x0E21;&#x0E35;&#x0E23;&#x0E39;&#x0E1B;</button>
-        <button class="fc" onclick="setFil('syn',this)">&#x2601;&#xFE0F; Synced</button>
+        <button class="fc on" onclick="setFil('all',this)">ทั้งหมด</button>
+        <button class="fc" onclick="setFil('inc',this)">💚 รายรับ</button>
+        <button class="fc" onclick="setFil('exp',this)">❤️ รายจ่าย</button>
+        <button class="fc" onclick="setFil('biz',this)">🏢 ธุรกิจ</button>
+        <button class="fc" onclick="setFil('per',this)">🏠 ส่วนตัว</button>
+        <button class="fc" onclick="setFil('mix',this)">🔀 ผสม</button>
+        <button class="fc" onclick="setFil('img',this)">📷 มีรูป</button>
+        <button class="fc" onclick="setFil('syn',this)">☁️ Synced</button>
       </div>
       <div id="rl"></div>
       <div class="pgbar" id="pgbar" style="display:none">
@@ -490,9 +574,39 @@ input[type=file]{display:none;}
     <!-- REPORT -->
     <div class="view" id="v-rep">
 
+      <!-- Zone Tabs -->
+      <div class="zone-tabs">
+        <button class="ztab all on" id="ztab_all" onclick="setRepZone('all',this)">🌐 ภาพรวม</button>
+        <button class="ztab biz" id="ztab_biz" onclick="setRepZone('biz',this)">🏢 ธุรกิจ</button>
+        <button class="ztab per" id="ztab_per" onclick="setRepZone('per',this)">🏠 ส่วนตัว</button>
+        <button class="ztab mix" id="ztab_mix" onclick="setRepZone('mix',this)">🔀 ผสม</button>
+      </div>
+
+      <!-- Zone Summary (3 cards) -->
+      <div class="zone-summary">
+        <div class="zscard biz">
+          <div class="zsico">🏢</div>
+          <div class="zslbl">ธุรกิจ</div>
+          <div class="zsval biz" id="zs_biz_profit">฿0</div>
+          <div class="zsub" id="zs_biz_sub">กำไร</div>
+        </div>
+        <div class="zscard per">
+          <div class="zsico">🏠</div>
+          <div class="zslbl">ส่วนตัว</div>
+          <div class="zsval per" id="zs_per_exp">฿0</div>
+          <div class="zsub">รายจ่าย</div>
+        </div>
+        <div class="zscard mix">
+          <div class="zsico">🔀</div>
+          <div class="zslbl">ผสม</div>
+          <div class="zsval mix" id="zs_mix_exp">฿0</div>
+          <div class="zsub">รายจ่าย</div>
+        </div>
+      </div>
+
       <!-- สรุปการเงิน -->
       <div class="rcard">
-        <div class="rclbl">📊 สรุปการเงิน</div>
+        <div class="rclbl" id="rep-zone-lbl">📊 สรุปการเงิน — ภาพรวม</div>
         <div class="sgrid" id="sg"></div>
       </div>
 
@@ -518,7 +632,6 @@ input[type=file]{display:none;}
       <div class="rcard">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
           <div class="rclbl" style="margin-bottom:0">🧾 รายงานภาษีสรรพากร</div>
-          <!-- VAT Toggle -->
           <button id="vatToggleBtn" onclick="toggleVat()" class="vattoggle on">
             <span class="vatdot"></span><span id="vatToggleLbl">แสดง VAT</span>
           </button>
@@ -598,52 +711,23 @@ input[type=file]{display:none;}
     <div class="shh"></div>
     <div class="shtit">⚙️ ตั้งค่า</div>
 
-    <!-- ── AI API KEY ── -->
-    <div class="ssec" style="color:var(--gold)">🤖 AI API Key</div>
-    <div class="apistatus none" id="apiStatus">
-      <div class="apidot"></div><span id="apiStatusTxt">ยังไม่ได้ตั้งค่า API Key</span>
+    <!-- ── AI PROVIDER ── -->
+    <div class="ssec" style="color:var(--gold)">🤖 AI ที่ใช้อยู่</div>
+    <div id="provActiveBanner" style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:rgba(79,141,255,.08);border:1.5px solid rgba(79,141,255,.2);border-radius:12px;margin-bottom:14px">
+      <span id="provActiveIco" style="font-size:1.3rem">🔵</span>
+      <div style="flex:1">
+        <div id="provActiveName" style="font-weight:800;font-size:.88rem">Google Gemini</div>
+        <div id="provActiveKey" style="font-size:.7rem;color:var(--t2)">ยังไม่มี API Key</div>
+      </div>
+      <span id="provActiveStat" style="font-size:.72rem;font-weight:700;color:var(--t3)">❌</span>
     </div>
-    <!-- เลือก Provider -->
-    <div class="slbl" style="margin-bottom:8px">เลือก AI Provider</div>
-    <div class="apiproviders">
-      <div class="apiprov on" id="prov_gemini" onclick="selectProvider('gemini')">
-        <div class="apiprovname">🔵 Google Gemini</div>
-        <div class="apiprovdesc">Flash 2.0 · ฟรี 1,500/วัน</div>
-      </div>
-      <div class="apiprov" id="prov_claude" onclick="selectProvider('claude')">
-        <div class="apiprovname">🟠 Claude</div>
-        <div class="apiprovdesc">Sonnet · อ่านรูปแม่น · $5 ฟรีแรก</div>
-      </div>
-      <div class="apiprov" id="prov_openai" onclick="selectProvider('openai')">
-        <div class="apiprovname">🟢 OpenAI</div>
-        <div class="apiprovdesc">GPT-4o · Pay-per-use</div>
-      </div>
-      <div class="apiprov" id="prov_llama" onclick="selectProvider('llama')">
-        <div class="apiprovname">🦙 Llama 4 (Meta)</div>
-        <div class="apiprovdesc" style="color:var(--inc)">✅ ฟรี! · อ่านรูปได้ · via Groq</div>
-      </div>
-      <div class="apiprov" id="prov_groq" onclick="selectProvider('groq')">
-        <div class="apiprovname">⚡ Groq</div>
-        <div class="apiprovdesc" style="color:var(--inc)">✅ ฟรี! เร็วมาก · text เท่านั้น</div>
-      </div>
-      <div class="apiprov" id="prov_custom" onclick="selectProvider('custom')">
-        <div class="apiprovname">⚙️ Custom</div>
-        <div class="apiprovdesc">API อื่นๆ กำหนดเอง</div>
-      </div>
-    </div>
-    <!-- ลิงก์ขอ Key -->
-    <a id="apiGetLink" href="https://aistudio.google.com/apikey" target="_blank" class="apilink">🔑 ขอ API Key ฟรีที่นี่ ↗</a>
-    <!-- ช่องใส่ Key -->
-    <div class="slbl">API Key</div>
-    <div class="apirow">
-      <input class="apiinp" id="apiKeyInp" type="password" placeholder="วาง API Key ที่นี่..." autocomplete="off" spellcheck="false">
-      <button class="apibtn test" onclick="testApiKey()">🧪 ทดสอบ</button>
-    </div>
-    <button class="ssave" style="margin-bottom:8px" onclick="saveApiKey()">🔑 บันทึก API Key</button>
-    <button class="sdanger" style="margin-bottom:20px;font-size:.75rem" onclick="clearApiKey()">🗑️ ลบ API Key ออก</button>
+
+    <!-- Provider Cards -->
+    <div class="ssec">เลือก Provider & ใส่ API Key</div>
+    <div id="providerCards"></div>
 
     <!-- ── ข้อมูลธุรกิจ ── -->
-    <div class="ssec">ข้อมูลธุรกิจ</div>
+    <div class="ssec" style="margin-top:6px">ข้อมูลธุรกิจ</div>
     <div class="slbl">ชื่อธุรกิจ</div>
     <input class="sinput" id="sBiz" placeholder="ร้านค้าของฉัน">
     <div class="ssec">หมวดหมู่รายรับ</div>
@@ -679,7 +763,7 @@ input[type=file]{display:none;}
 </script>
 <script>
 // ★ แก้เฉพาะ 2 บรรทัดนี้
-const SCRIPT_URL='https://script.google.com/macros/s/AKfycbw0ws4IztZVvufafK-56atRdQPU0En8OGF1T6QAq1O4aefD7SjkelV6oQtMlNyqxJE3zA/exec';
+const SCRIPT_URL='https://script.google.com/macros/s/AKfycbxhhWPokbYTGXoBStxqpTnjI8F-l8_pGhzhDUaBJdLornx04iATZzAbcEKShFg3_ehYdA/exec';
 const SHEET_URL='https://docs.google.com/spreadsheets/d/1KtbdZsOn5VlaFhCo0Gg_xh97IR-UbTA6aY9sUyRtbOU/edit';
 
 // ── API Key & Provider config ──
@@ -940,9 +1024,8 @@ function closeVoice(){if(recog){try{recog.stop();}catch(_){}recog=null;}vtxt='';
 
 // GEMINI (ผ่าน Apps Script Proxy)
 async function callG(b64, prompt){
-  // ดึง API Key จาก localStorage ก่อน — ถ้าไม่มีค่อยใช้ key ที่ตั้งไว้ใน Apps Script
-  const localKey = localStorage.getItem('bc_apikey')||'';
-  const provider  = localStorage.getItem('bc_provider')||'gemini';
+  const provider = localStorage.getItem('bc_provider')||'gemini';
+  const apiKey   = getApiKey(provider); // ดึง key เฉพาะค่ายที่ใช้อยู่
 
   const parts = [];
   if(b64) parts.push({inline_data:{mime_type:'image/jpeg', data:b64}});
@@ -953,46 +1036,28 @@ async function callG(b64, prompt){
     const r = await fetch(SCRIPT_URL, {
       method:'POST', redirect:'follow',
       headers:{'Content-Type':'text/plain'},
-      body: JSON.stringify({
-        action:'gemini',
-        contents:[{parts}],
-        apiKey: localKey,      // ← ส่ง key จาก localStorage
-        provider: provider     // ← ส่ง provider
-      })
+      body: JSON.stringify({ action:'gemini', contents:[{parts}], apiKey, provider })
     });
-
     rawText = await r.text();
-
-    if(!rawText || rawText.trim().startsWith('<')){
-      throw new Error('Apps Script ยังไม่ได้ Deploy หรือ permission ผิด — Deploy ใหม่แบบ "Anyone"');
-    }
-
+    if(!rawText||rawText.trim().startsWith('<'))
+      throw new Error('Apps Script ยังไม่ได้ Deploy — Deploy ใหม่แบบ "Anyone"');
     let d;
-    try{ d = JSON.parse(rawText); }
-    catch(ex){ throw new Error('Response ไม่ใช่ JSON: '+rawText.slice(0,100)); }
-
-    if(d.ok === false) throw new Error(d.error || 'Gemini proxy error');
-
-    if(!d.candidates || d.candidates.length === 0){
+    try{d=JSON.parse(rawText);}catch{throw new Error('Response ไม่ใช่ JSON: '+rawText.slice(0,100));}
+    if(d.ok===false) throw new Error(d.error||'AI proxy error');
+    if(!d.candidates||d.candidates.length===0)
       throw new Error('ไม่พบ candidates: '+JSON.stringify(d).slice(0,150));
-    }
-
-    const part0 = d.candidates[0]?.content?.parts?.[0];
-    if(!part0) throw new Error('candidates[0].content.parts ว่าง');
-
-    let txt = part0.text || '';
-    txt = txt.replace(/```json\s*/gi,'').replace(/```\s*/g,'').trim();
-    if(!txt) throw new Error('Gemini ตอบกลับว่าง — เช็ค API Key ในหน้าตั้งค่า');
-
-    try{ return JSON.parse(txt); }
-    catch(ex){
-      const m = txt.match(/(\[[\s\S]*\]|\{[\s\S]*\})/);
-      if(m){ try{ return JSON.parse(m[0]); }catch{} }
+    const part0=d.candidates[0]?.content?.parts?.[0];
+    if(!part0) throw new Error('candidates ว่าง');
+    let txt=part0.text||'';
+    txt=txt.replace(/```json\s*/gi,'').replace(/```\s*/g,'').trim();
+    if(!txt) throw new Error('AI ตอบว่าง — เช็ค API Key ในหน้าตั้งค่า ⚙️');
+    try{return JSON.parse(txt);}
+    catch{
+      const m=txt.match(/(\[[\s\S]*\]|\{[\s\S]*\})/);
+      if(m){try{return JSON.parse(m[0]);}catch{}}
       throw new Error('AI ตอบไม่ใช่ JSON: '+txt.slice(0,150));
     }
-  } catch(ex){
-    throw ex;
-  }
+  }catch(ex){throw ex;}
 }
 async function sendText(){
   const txt=document.getElementById('ta').value.trim();if(!txt)return;
@@ -1201,7 +1266,82 @@ function showCfm(data,b64){
   sel.innerHTML=all.map(c=>`<option value="${c}" ${c===m.category?'selected':''}>${c}</option>`).join('');
 
   document.getElementById('cfm').classList.add('on');
+  // reset zone เป็น biz ทุกครั้งที่เปิด confirm ใหม่
+  setCfZone('biz');
 }
+// ── ZONE FUNCTIONS ──
+let currentZone = 'biz'; // default = ธุรกิจ
+let repZone = 'all';     // zone filter สำหรับหน้า report
+
+const ZONE_LABELS = { biz:'🏢 ธุรกิจ', per:'🏠 ส่วนตัว', mix:'🔀 ผสม' };
+const ZONE_NAMES  = { biz:'ธุรกิจ', per:'ส่วนตัว', mix:'ผสม' };
+
+function setCfZone(z){
+  currentZone = z;
+  ['biz','per','mix'].forEach(k=>{
+    document.getElementById('zbtn_'+k).className='zonebtn '+k+(k===z?' on':'');
+  });
+  // แสดง/ซ่อน mix % row
+  document.getElementById('mixpct-row').style.display = z==='mix'?'flex':'none';
+}
+
+function clampMix(el){
+  let v=parseInt(el.value)||0;
+  if(v<0)v=0;if(v>100)v=100;
+  el.value=v;
+}
+
+function setRepZone(z, el){
+  repZone = z;
+  document.querySelectorAll('.ztab').forEach(t=>t.classList.remove('on'));
+  el.classList.add('on');
+  const labels = {all:'ภาพรวม',biz:'ธุรกิจ',per:'ส่วนตัว',mix:'ผสม'};
+  document.getElementById('rep-zone-lbl').textContent = '📊 สรุปการเงิน — '+labels[z];
+  renderReport();
+}
+
+// กรอง recs ตาม zone สำหรับ report
+function recsForZone(z){
+  if(z==='all') return recs;
+  if(z==='mix'){
+    // mix = รวม biz part และ per part จาก rec.zone='mix'
+    return recs.filter(r=>r.zone==='mix');
+  }
+  return recs.filter(r=>(r.zone||'biz')===z);
+}
+
+// คำนวณยอดจริงของ rec (คำนึงถึง mixPct)
+function recAmt(r){
+  if(r.zone==='mix'){
+    const pct=(r.mixPct||50)/100;
+    if(repZone==='biz') return r.amount*pct;
+    if(repZone==='per') return r.amount*(1-pct);
+  }
+  return r.amount;
+}
+
+function renderZoneSummary(){
+  // ธุรกิจ
+  const bizRecs = recs.filter(r=>(r.zone||'biz')==='biz');
+  const mixRecs = recs.filter(r=>r.zone==='mix');
+  const bizInc  = bizRecs.filter(r=>r.type==='inc').reduce((s,r)=>s+r.amount,0)
+                + mixRecs.filter(r=>r.type==='inc').reduce((s,r)=>s+r.amount*(r.mixPct||50)/100,0);
+  const bizExp  = bizRecs.filter(r=>r.type==='exp').reduce((s,r)=>s+r.amount,0)
+                + mixRecs.filter(r=>r.type==='exp').reduce((s,r)=>s+r.amount*(r.mixPct||50)/100,0);
+  // ส่วนตัว
+  const perRecs = recs.filter(r=>r.zone==='per');
+  const perExp  = perRecs.filter(r=>r.type==='exp').reduce((s,r)=>s+r.amount,0)
+                + mixRecs.filter(r=>r.type==='exp').reduce((s,r)=>s+r.amount*(1-(r.mixPct||50)/100),0);
+  // ผสม
+  const mixExp  = mixRecs.filter(r=>r.type==='exp').reduce((s,r)=>s+r.amount,0);
+  const bizProfit = bizInc - bizExp;
+  document.getElementById('zs_biz_profit').textContent = (bizProfit>=0?'':'−')+'฿'+fmtK(Math.abs(bizProfit));
+  document.getElementById('zs_biz_profit').style.color = bizProfit>=0?'var(--inc)':'var(--exp)';
+  document.getElementById('zs_biz_sub').textContent = bizProfit>=0?'กำไรธุรกิจ':'ขาดทุน';
+  document.getElementById('zs_per_exp').textContent = '฿'+fmtK(perExp);
+  document.getElementById('zs_mix_exp').textContent = '฿'+fmtK(mixExp);
+}
+
 function dismissConfirm(){
   document.getElementById('cfm').classList.remove('on');
   pend=null;
@@ -1227,6 +1367,8 @@ async function saveRecord(){
   const cat=document.getElementById('cfcat').value;
   const now=new Date().toISOString();
   const selectedType=window._cfType||pend.entries[0].type||'exp';
+  const selectedZone=currentZone||'biz';
+  const mixPct=selectedZone==='mix'?(parseInt(document.getElementById('mixpct').value)||50):50;
   entries.forEach(e=>{e.type=selectedType;});
 
   // ── ขั้นที่ 1: อัปโหลดรูปไป Drive ──
@@ -1252,6 +1394,8 @@ async function saveRecord(){
     const rec={
       id:Date.now()+'_'+Math.random().toString(36).slice(2,5),
       type:selectedType,
+      zone:selectedZone,
+      mixPct:selectedZone==='mix'?mixPct:undefined,
       name:e.name||'?',
       amount:parseFloat(e.amount)||0,
       category:cat||e.category||'อื่นๆ',
@@ -1286,13 +1430,18 @@ async function saveRecord(){
 // SUCCESS POPUP
 function showSucc(rec, imageUrl, synced){
   const isI=rec.type==='inc';
+  const z=rec.zone||'biz';
+  const zoneIco={biz:'🏢',per:'🏠',mix:'🔀'};
+  const zoneLabel={biz:'ธุรกิจ',per:'ส่วนตัว',mix:'ผสม'};
   document.getElementById('succIco').textContent=isI?'💰':'✅';
   document.getElementById('succTit').textContent=isI?'รับเงินแล้ว! 🎉':'บันทึกสำเร็จ! ✅';
   document.getElementById('succAmt').textContent=(isI?'+':'-')+'฿'+fmt(rec.amount);
   document.getElementById('succAmt').style.color=isI?'var(--inc)':'var(--exp)';
   document.getElementById('succCat').textContent=rec.name+' · '+rec.category;
+  const mixInfo=z==='mix'?` (ธุรกิจ ${rec.mixPct||50}% / ส่วนตัว ${100-(rec.mixPct||50)}%)`:'';
   let bars=`
-    <div class="succbar"><span class="succbarlbl">📦 Local Storage</span><span class="succbarval" style="color:var(--inc)">✅ บันทึกแล้ว</span></div>
+    <div class="succbar"><span class="succbarlbl">📦 บันทึกแล้ว</span><span class="succbarval" style="color:var(--inc)">✅ Local Storage</span></div>
+    <div class="succbar"><span class="succbarlbl">${zoneIco[z]} โซน</span><span class="succbarval">${zoneLabel[z]}${mixInfo}</span></div>
     <div class="succbar"><span class="succbarlbl">☁️ Google Sheets</span><span class="succbarval ${synced?'sheet':''}">${synced?'✅ Synced แล้ว':'⏳ รอ Sync'}</span></div>
     <div class="succbar"><span class="succbarlbl">🖼️ Google Drive</span><span class="succbarval ${imageUrl?'drive':''}">${imageUrl?'✅ อัปโหลดแล้ว':'— ไม่มีรูป'}</span></div>
   `;
@@ -1323,10 +1472,13 @@ function renderRecs(){
   const list=document.getElementById('rl');
   const q=(document.getElementById('sinp')?.value||'').toLowerCase();
   let data=[...recs].reverse();
-  if(fil==='inc')data=data.filter(r=>r.type==='inc');
-  else if(fil==='exp')data=data.filter(r=>r.type==='exp');
-  else if(fil==='img')data=data.filter(r=>r.imageUrl);
-  else if(fil==='syn')data=data.filter(r=>r.synced);
+  if(fil==='inc')   data=data.filter(r=>r.type==='inc');
+  else if(fil==='exp') data=data.filter(r=>r.type==='exp');
+  else if(fil==='biz') data=data.filter(r=>(r.zone||'biz')==='biz');
+  else if(fil==='per') data=data.filter(r=>r.zone==='per');
+  else if(fil==='mix') data=data.filter(r=>r.zone==='mix');
+  else if(fil==='img') data=data.filter(r=>r.imageUrl);
+  else if(fil==='syn') data=data.filter(r=>r.synced);
   if(q){data=data.filter(r=>(r.name+r.category+r.note).toLowerCase().includes(q));recPage=0;}
   if(!data.length){
     list.innerHTML=`<div class="empty"><div style="font-size:2.5rem;margin-bottom:12px">📁</div><p style="font-size:.85rem">${q?'ไม่พบรายการ':'ยังไม่มีรายการ<br>ถ่ายรูปหรือโยนไฟล์ด้านบน'}</p></div>`;
@@ -1335,7 +1487,6 @@ function renderRecs(){
   const totalPages=Math.ceil(data.length/REC_PER_PAGE);
   recPage=Math.max(0,Math.min(recPage,totalPages-1));
   const pageData=data.slice(recPage*REC_PER_PAGE,(recPage+1)*REC_PER_PAGE);
-  // pagination bar
   const pgbar=document.getElementById('pgbar');
   pgbar.style.display=totalPages>1?'flex':'none';
   document.getElementById('pglbl').textContent=`${recPage+1} / ${totalPages}`;
@@ -1344,26 +1495,31 @@ function renderRecs(){
   const grp={};
   pageData.forEach(r=>{const d=new Date(r.date).toLocaleDateString('th-TH',{day:'numeric',month:'long',year:'numeric'});if(!grp[d])grp[d]=[];grp[d].push(r);});
   const si={receipt:'🧾',bill:'📋',chat:'💬',image:'🖼️',manual:'✏️',text:'📝',unknown:'📄'};
+  const zoneIco={biz:'🏢',per:'🏠',mix:'🔀'};
   list.innerHTML=Object.entries(grp).map(([d,rs])=>
     `<div class="dlbl">${d}</div>`+
-    rs.map(r=>`<div class="rec" onclick="openDetail('${r.id}')">
-      <div class="rth">${r.imageUrl?`<img src="${r.imageUrl}" loading="lazy">`:(r.type==='inc'?'💰':'💸')}</div>
-      <div class="rb ${r.type}"></div>
-      <div class="ri">
-        <div class="rn">${r.name}</div>
-        <div class="rtgs">
-          <span class="rtag cat">${r.category}</span>
-          <span class="rtag src">${si[r.source]||'📄'}</span>
-          ${r.imageUrl?'<span class="rtag img">📷</span>':''}
-          ${r.synced?'<span class="rtag syn">☁️</span>':''}
+    rs.map(r=>{
+      const z=r.zone||'biz';
+      const zTag=`<span class="ztag ${z}">${zoneIco[z]||'🏢'} ${ZONE_NAMES[z]||'ธุรกิจ'}${z==='mix'?' '+((r.mixPct||50))+'%':''}</span>`;
+      return `<div class="rec" onclick="openDetail('${r.id}')">
+        <div class="rth">${r.imageUrl?`<img src="${r.imageUrl}" loading="lazy">`:(r.type==='inc'?'💰':'💸')}</div>
+        <div class="rb ${r.type}"></div>
+        <div class="ri">
+          <div class="rn">${r.name}</div>
+          <div class="rtgs">
+            <span class="rtag cat">${r.category}</span>
+            ${zTag}
+            ${r.imageUrl?'<span class="rtag img">📷</span>':''}
+            ${r.synced?'<span class="rtag syn">☁️</span>':''}
+          </div>
+          ${r.note?`<div class="rnote">${r.note.slice(0,55)}</div>`:''}
         </div>
-        ${r.note?`<div class="rnote">${r.note.slice(0,55)}</div>`:''}
-      </div>
-      <div class="rr">
-        <div class="ramt ${r.type}">${r.type==='inc'?'+':'−'}฿${fmt(r.amount)}</div>
-        <div class="rtm">${r.time||(r.date&&r.date!='Invalid Date'?new Date(r.date).toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'}):'')}</div>
-      </div>
-    </div>`).join('')
+        <div class="rr">
+          <div class="ramt ${r.type}">${r.type==='inc'?'+':'−'}฿${fmt(r.amount)}</div>
+          <div class="rtm">${r.date&&r.date!='Invalid Date'?new Date(r.date).toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'}):''}</div>
+        </div>
+      </div>`;
+    }).join('')
   ).join('');
 }
 function setFil(f,el){fil=f;recPage=0;document.querySelectorAll('.fc').forEach(c=>c.classList.remove('on'));el.classList.add('on');renderRecs();}
@@ -1375,14 +1531,19 @@ function openDetail(id){
   const di=document.getElementById('di');
   if(r.imageUrl){di.src=r.imageUrl;di.dataset.url=r.imageUrl;di.classList.add('on');}else di.classList.remove('on');
   const isI=r.type==='inc';
+  const z=r.zone||'biz';
+  const zoneIco={biz:'🏢',per:'🏠',mix:'🔀'};
+  const zoneLabel={biz:'ธุรกิจ',per:'ส่วนตัว',mix:'ผสม'};
   const sl={receipt:'ใบเสร็จ',bill:'บิล',chat:'แชท',image:'รูปภาพ',manual:'กรอกเอง',text:'ข้อความ'};
   document.getElementById('dc').innerHTML=`
     <div class="dhead">
       <span class="dpill ${isI?'i':'e'}">${isI?'+ รายรับ':'- รายจ่าย'}</span>
-      <div><div class="dname">${r.name}</div><div class="damt ${isI?'i':'e'}">${isI?'+':'−'}฿${fmt(r.amount)}</div></div>
+      <span class="ztag ${z}" style="font-size:.72rem;padding:3px 10px">${zoneIco[z]} ${zoneLabel[z]}${z==='mix'?' ('+(r.mixPct||50)+'% ธุรกิจ)':''}</span>
+      <div style="flex:1"><div class="dname">${r.name}</div><div class="damt ${isI?'i':'e'}">${isI?'+':'−'}฿${fmt(r.amount)}</div></div>
     </div>
     <div class="dr"><span class="drl">วันที่/เวลา</span><span class="drv">${new Date(r.date).toLocaleString('th-TH')}</span></div>
     <div class="dr"><span class="drl">หมวดหมู่</span><span class="drv">${r.category}</span></div>
+    <div class="dr"><span class="drl">โซน</span><span class="drv">${zoneIco[z]} ${zoneLabel[z]}${z==='mix'?` · ธุรกิจ ${r.mixPct||50}% / ส่วนตัว ${100-(r.mixPct||50)}%`:''}</span></div>
     <div class="dr"><span class="drl">แหล่งที่มา</span><span class="drv">${sl[r.source]||r.source}</span></div>
     <div class="dr"><span class="drl">รูปหลักฐาน</span><span class="drv" style="color:${r.imageUrl?'var(--inc)':'var(--t3)'}">${r.imageUrl?'✅ อยู่ใน Drive':'❌ ไม่มีรูป'}</span></div>
     <div class="dr"><span class="drl">Google Sheets</span><span class="drv" style="color:${r.synced?'var(--inc)':'var(--gold)'}">${r.synced?'☁️ Sync แล้ว':'⏳ รอ Sync'}</span></div>
@@ -1421,22 +1582,26 @@ function toggleVat(){
 function renderReport(){
   renderMonthChart();
   renderTaxReport();
-  const inc=recs.filter(r=>r.type==='inc').reduce((s,r)=>s+r.amount,0);
-  const exp=recs.filter(r=>r.type==='exp').reduce((s,r)=>s+r.amount,0);
-  const syn=recs.filter(r=>r.synced).length;
-  const wi=recs.filter(r=>r.imageUrl).length;
-  const profit=inc-exp;
+  renderZoneSummary();
+  // กรอง recs ตาม repZone
+  const filteredRecs = recsForZone(repZone);
+  const calcInc = r => (r.zone==='mix'&&repZone!=='all') ? r.amount*(repZone==='biz'?(r.mixPct||50)/100:(1-(r.mixPct||50)/100)) : r.amount;
+  const inc = filteredRecs.filter(r=>r.type==='inc').reduce((s,r)=>s+calcInc(r),0);
+  const exp = filteredRecs.filter(r=>r.type==='exp').reduce((s,r)=>s+calcInc(r),0);
+  const profit = inc-exp;
+  const syn = recs.filter(r=>r.synced).length;
+  const wi  = recs.filter(r=>r.imageUrl).length;
   document.getElementById('sg').innerHTML=`
     <div class="sbox"><div class="sblbl">รายรับ</div><div class="sbv" style="color:var(--inc)">฿${fmtK(inc)}</div></div>
     <div class="sbox"><div class="sblbl">รายจ่าย</div><div class="sbv" style="color:var(--exp)">฿${fmtK(exp)}</div></div>
     <div class="sbox"><div class="sblbl">กำไรสุทธิ</div><div class="sbv" style="color:${profit>=0?'var(--inc)':'var(--exp)'}">฿${fmtK(profit)}</div></div>
-    <div class="sbox"><div class="sblbl">Synced</div><div class="sbv" style="color:var(--acc)">${syn}/${recs.length}</div></div>
+    <div class="sbox"><div class="sblbl">รายการ</div><div class="sbv" style="color:var(--acc)">${filteredRecs.length}</div></div>
     <div class="sbox"><div class="sblbl">มีรูป</div><div class="sbv" style="color:var(--gold)">${wi}</div></div>
-    <div class="sbox"><div class="sblbl">รอ Sync</div><div class="sbv" style="color:var(--t2)">${recs.length-syn}</div></div>
+    <div class="sbox"><div class="sblbl">Synced</div><div class="sbv" style="color:var(--t2)">${syn}/${recs.length}</div></div>
   `;
-  // รายจ่ายตามหมวด
+  // รายจ่ายตามหมวด (ใช้ filteredRecs)
   const cm={};
-  recs.filter(r=>r.type==='exp').forEach(r=>cm[r.category]=(cm[r.category]||0)+r.amount);
+  filteredRecs.filter(r=>r.type==='exp').forEach(r=>cm[r.category]=(cm[r.category]||0)+calcInc(r));
   const mx=Math.max(...Object.values(cm),1);
   const clr=['var(--exp)','var(--acc)','var(--gold)','var(--inc)','var(--pu)','#ec4899'];
   document.getElementById('cc').innerHTML=
@@ -1574,37 +1739,62 @@ function saveTxt(txt,yr){
   toast('✅ บันทึกสรุปภาษีแล้ว');
 }
 
-// AI วิเคราะห์ธุรกิจ — แก้ prompt ให้ตอบ text ไม่ใช่ JSON
+// AI วิเคราะห์ธุรกิจ — รองรับข้อมูล zone
 async function genReport(){
   const btn=document.getElementById('rb');
   const box=document.getElementById('aiins');
   btn.disabled=true;btn.textContent='⏳ กำลังวิเคราะห์...';
-  box.textContent='🤖 AI กำลังวิเคราะห์ข้อมูลธุรกิจ...';
+  box.textContent='🤖 AI กำลังวิเคราะห์ข้อมูล...';
+
+  // คำนวณแยก zone
+  const calcZ=(zone,type)=>recs.filter(r=>(r.zone||'biz')===zone&&r.type===type).reduce((s,r)=>s+r.amount,0);
+  const bizInc=calcZ('biz','inc'), bizExp=calcZ('biz','exp');
+  const perInc=calcZ('per','inc'), perExp=calcZ('per','exp');
+  const mixInc=calcZ('mix','inc'), mixExp=calcZ('mix','exp');
   const totalInc=recs.filter(r=>r.type==='inc').reduce((s,r)=>s+r.amount,0);
   const totalExp=recs.filter(r=>r.type==='exp').reduce((s,r)=>s+r.amount,0);
+
+  // หมวดรายจ่ายธุรกิจ
   const expCat={};
-  recs.filter(r=>r.type==='exp').forEach(r=>expCat[r.category]=(expCat[r.category]||0)+r.amount);
+  recs.filter(r=>r.type==='exp'&&(r.zone||'biz')==='biz').forEach(r=>expCat[r.category]=(expCat[r.category]||0)+r.amount);
   const topCats=Object.entries(expCat).sort((a,b)=>b[1]-a[1]).slice(0,5).map(([k,v])=>`${k}: ฿${fmt(v)}`).join(', ');
-  const recent=recs.slice(-10).map(r=>`${r.type==='inc'?'รับ':'จ่าย'} ${r.name} ฿${r.amount}`).join(', ');
+
+  // รายการล่าสุด 10 รายการ
+  const recent=recs.slice(-10).map(r=>{
+    const z={biz:'🏢',per:'🏠',mix:'🔀'}[r.zone||'biz'];
+    return `${z}${r.type==='inc'?'รับ':'จ่าย'} ${r.name} ฿${r.amount}`;
+  }).join(', ');
+
   const prompt=`คุณคือที่ปรึกษาทางการเงินสำหรับธุรกิจ SME ไทย
-วิเคราะห์ข้อมูลธุรกิจต่อไปนี้ และให้คำแนะนำเป็นภาษาไทย ตอบเป็นข้อความธรรมดา ห้ามตอบ JSON:
+วิเคราะห์ข้อมูลต่อไปนี้ แล้วให้คำแนะนำเป็นภาษาไทย ตอบเป็นข้อความธรรมดา ห้ามตอบ JSON:
 
 ธุรกิจ: ${cfg.bizName}
-รายได้รวม: ฿${fmt(totalInc)}
-ค่าใช้จ่ายรวม: ฿${fmt(totalExp)}
-กำไรสุทธิ: ฿${fmt(totalInc-totalExp)}
-จำนวนรายการ: ${recs.length} รายการ
-หมวดรายจ่ายหลัก: ${topCats}
+
+📊 ภาพรวมทั้งหมด:
+  รายได้รวม: ฿${fmt(totalInc)} | ค่าใช้จ่ายรวม: ฿${fmt(totalExp)} | กำไร/ขาดทุน: ฿${fmt(totalInc-totalExp)}
+
+🏢 โซนธุรกิจ:
+  รายได้: ฿${fmt(bizInc)} | ค่าใช้จ่าย: ฿${fmt(bizExp)} | กำไรธุรกิจ: ฿${fmt(bizInc-bizExp)}
+  หมวดรายจ่ายหลัก: ${topCats||'ไม่มีข้อมูล'}
+
+🏠 โซนส่วนตัว:
+  รายได้: ฿${fmt(perInc)} | ค่าใช้จ่าย: ฿${fmt(perExp)}
+
+🔀 โซนผสม:
+  รายได้: ฿${fmt(mixInc)} | ค่าใช้จ่าย: ฿${fmt(mixExp)}
+
+จำนวนรายการทั้งหมด: ${recs.length} รายการ
 รายการล่าสุด: ${recent}
 
-กรุณา:
-1. สรุปภาพรวมธุรกิจ (2-3 ประโยค)
-2. จุดแข็งและจุดที่ควรระวัง
-3. คำแนะนำเพื่อเพิ่มกำไร (3 ข้อ)
+กรุณาวิเคราะห์:
+1. สุขภาพทางการเงินของธุรกิจ (2-3 ประโยค)
+2. สัดส่วนค่าใช้จ่ายส่วนตัว vs ธุรกิจ — สมดุลไหม?
+3. ค่าใช้จ่ายส่วนไหนที่ควรลดหรือควบคุม (3 ข้อ)
+4. แนวทางเพิ่มรายได้หรือกำไรธุรกิจ (2 ข้อ)
 ตอบสั้นกระชับ เข้าใจง่าย`;
+
   try{
     const r=await callG(null,prompt);
-    // genReport ตอบ text ไม่ใช่ JSON
     let txt='';
     if(typeof r==='string') txt=r;
     else if(r?.note) txt=r.note;
@@ -1612,21 +1802,25 @@ async function genReport(){
     else txt=JSON.stringify(r,null,2);
     box.textContent=txt;
   }catch(e){
-    box.textContent='❌ วิเคราะห์ไม่ได้: '+e.message+'\n\nเช็คว่า API Key ตั้งค่าแล้วในหน้าตั้งค่า';
+    box.textContent='❌ วิเคราะห์ไม่ได้: '+e.message+'\n\nเช็ค API Key ในหน้าตั้งค่า';
   }
   btn.disabled=false;btn.textContent='🤖 วิเคราะห์ใหม่';
 }
 
 // EXPORT: CSV ทั้งหมด
 function doCSV(){
-  const rows=[['ID','วันที่','เวลา','ประเภท','ชื่อรายการ','หมวดหมู่','จำนวนเงิน','มีรูป','URL รูป','Synced','หมายเหตุ']];
+  const rows=[['ID','วันที่','เวลา','ประเภท','โซน','โซน%ธุรกิจ','ชื่อรายการ','หมวดหมู่','จำนวนเงิน','มีรูป','URL รูป','Synced','หมายเหตุ']];
+  const zl={biz:'ธุรกิจ',per:'ส่วนตัว',mix:'ผสม'};
   recs.forEach(r=>{
     const d=new Date(r.date);
+    const z=r.zone||'biz';
     rows.push([
       r.id,
       isNaN(d)?r.date:d.toLocaleDateString('th-TH'),
       isNaN(d)?'':d.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'}),
       r.type==='inc'?'รายรับ':'รายจ่าย',
+      zl[z]||z,
+      z==='mix'?(r.mixPct||50)+'%':'',
       r.name,r.category,r.amount,
       r.imageUrl?'มี':'ไม่มี',r.imageUrl||'',
       r.synced?'Yes':'No',
@@ -1646,93 +1840,127 @@ function openSettings(){
   _ic=[...cfg.incomeCategories];_ec=[...cfg.expenseCategories];
   document.getElementById('sBiz').value=cfg.bizName||'';
   rCatTags('inc');rCatTags('exp');
-  // โหลด API Key UI
-  initApiKeyUI();
+  renderProviderCards();
+  updateProvActiveBanner();
   document.getElementById('ss').classList.add('on');
 }
 
-// ── API KEY MANAGEMENT ──
-function initApiKeyUI(){
-  const key=localStorage.getItem('bc_apikey')||'';
+// ── MULTI-PROVIDER KEY STORAGE ──
+function getApiKeys(){ try{return JSON.parse(localStorage.getItem('bc_apikeys')||'{}');}catch{return {};} }
+function setApiKey(prov,key){ const k=getApiKeys(); if(key)k[prov]=key; else delete k[prov]; localStorage.setItem('bc_apikeys',JSON.stringify(k)); }
+function getApiKey(prov){ return getApiKeys()[prov]||''; }
+function maskKey(k){ if(!k||k.length<8)return '***'; return k.slice(0,6)+'···'+k.slice(-4); }
+
+function updateProvActiveBanner(){
   const prov=localStorage.getItem('bc_provider')||'gemini';
-  currentProvider=prov;
-  // แสดง key แบบ mask
-  const inp=document.getElementById('apiKeyInp');
-  inp.value=key?key:'';
-  inp.placeholder=PROVIDERS[prov]?.keyHint||'วาง API Key ที่นี่...';
-  // highlight provider ที่เลือก
-  document.querySelectorAll('.apiprov').forEach(el=>el.classList.remove('on'));
-  const provEl=document.getElementById('prov_'+prov);
-  if(provEl) provEl.classList.add('on');
-  // อัปเดตลิงก์ขอ key
-  const link=document.getElementById('apiGetLink');
-  const p=PROVIDERS[prov];
-  if(p?.keyLink){link.href=p.keyLink;link.textContent='🔑 ขอ API Key ('+p.name+') ↗';link.style.display='block';}
-  else{link.style.display='none';}
-  // แสดงสถานะ
-  updateApiStatus(key?'set':'none', key?'✅ ตั้งค่าแล้ว ('+maskKey(key)+')':'⚪ ยังไม่ได้ใส่ API Key');
+  const p=PROVIDERS[prov]||PROVIDERS.gemini;
+  const key=getApiKey(prov);
+  document.getElementById('provActiveIco').textContent=p.icon||'🔵';
+  document.getElementById('provActiveName').textContent=p.name;
+  document.getElementById('provActiveKey').textContent=key?('Key: '+maskKey(key)):'⚠️ ยังไม่มี API Key';
+  document.getElementById('provActiveStat').textContent=key?'✅':'❌';
+  document.getElementById('provActiveStat').style.color=key?'var(--inc)':'var(--exp)';
 }
-function maskKey(k){
-  if(!k||k.length<8) return '***';
-  return k.slice(0,6)+'...'+k.slice(-4);
+
+function renderProviderCards(){
+  const keys=getApiKeys();
+  const active=localStorage.getItem('bc_provider')||'gemini';
+  const html=Object.entries(PROVIDERS).map(([id,p])=>{
+    const key=keys[id]||'';
+    const isActive=active===id;
+    const hasKey=!!key;
+    return `<div class="pcard${isActive?' active':''}${hasKey?' haskey':''}" id="pc_${id}">
+      <div class="pchead" onclick="toggleProvCard('${id}')">
+        <span class="pcico">${p.icon}</span>
+        <div class="pcinfo">
+          <div class="pcname">${p.name}</div>
+          <div class="pcdesc">${p.keyDesc||''}</div>
+        </div>
+        <span class="pcbadge ${isActive?'active':hasKey?'haskey':'nokey'}">${isActive?'✓ ใช้อยู่':hasKey?'✅ มี Key':'ไม่มี Key'}</span>
+        <span id="pcarrow_${id}" style="color:var(--t3);font-size:.9rem;margin-left:4px">›</span>
+      </div>
+      <div class="pcbody">
+        <div class="pcstatus" id="pcst_${id}" style="display:none"></div>
+        ${p.keyLink?`<a class="pclink" href="${p.keyLink}" target="_blank">🔑 ขอ Key ที่นี่ ↗ (${p.name})</a>`:''}
+        <div class="pcrow">
+          <input class="pcinp" id="pcinp_${id}" type="password"
+            placeholder="${p.keyHint||'API Key'}"
+            value="${key}"
+            autocomplete="off" spellcheck="false">
+          <button class="pcbtn test" onclick="testProvKey('${id}')">🧪</button>
+        </div>
+        <div class="pcactions">
+          <button class="pcbtn save" onclick="saveProvKey('${id}')">💾 บันทึก</button>
+          <button class="pcbtn use" onclick="useProvider('${id}')" ${isActive?'disabled style="opacity:.4"':''}>▶ ใช้ค่ายนี้</button>
+          ${key?`<button class="pcbtn del" onclick="delProvKey('${id}')">🗑️</button>`:''}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+  document.getElementById('providerCards').innerHTML=html;
 }
-function updateApiStatus(state, msg){
-  const el=document.getElementById('apiStatus');
-  el.className='apistatus '+state;
-  document.getElementById('apiStatusTxt').textContent=msg;
+
+function toggleProvCard(id){
+  const card=document.getElementById('pc_'+id);
+  const arrow=document.getElementById('pcarrow_'+id);
+  const isOpen=card.classList.contains('open');
+  document.querySelectorAll('.pcard').forEach(c=>c.classList.remove('open'));
+  document.querySelectorAll('[id^=pcarrow_]').forEach(a=>{a.textContent='›';});
+  if(!isOpen){card.classList.add('open');if(arrow)arrow.textContent='⌄';}
 }
-function selectProvider(prov){
-  currentProvider=prov;
-  localStorage.setItem('bc_provider',prov);
-  document.querySelectorAll('.apiprov').forEach(el=>el.classList.remove('on'));
-  document.getElementById('prov_'+prov)?.classList.add('on');
-  const p=PROVIDERS[prov];
-  document.getElementById('apiKeyInp').placeholder=p?.keyHint||'วาง API Key...';
-  const link=document.getElementById('apiGetLink');
-  if(p?.keyLink){link.href=p.keyLink;link.textContent='🔑 ขอ API Key ('+p.name+') ↗';link.style.display='block';}
-  else{link.style.display='none';}
-  toast('🔄 เปลี่ยนเป็น '+p.name);
+
+function saveProvKey(id){
+  const val=(document.getElementById('pcinp_'+id)||{}).value?.trim();
+  if(!val){toast('⚠️ ใส่ API Key ก่อน');return;}
+  setApiKey(id,val);
+  renderProviderCards();
+  updateProvActiveBanner();
+  toast('✅ บันทึก Key ('+PROVIDERS[id]?.name+') แล้ว');
+  post({action:'saveApiKey',apiKey:val,provider:id}).catch(()=>{});
 }
-function saveApiKey(){
-  const key=document.getElementById('apiKeyInp').value.trim();
-  if(!key){toast('⚠️ กรุณาใส่ API Key ก่อน');return;}
-  localStorage.setItem('bc_apikey',key);
-  localStorage.setItem('bc_provider',currentProvider);
-  updateApiStatus('ok','✅ บันทึกแล้ว ('+maskKey(key)+')');
-  toast('🔑 บันทึก API Key แล้ว');
-  // ส่ง key ไปบันทึกใน Apps Script Properties ด้วย (optional)
-  post({action:'saveApiKey', apiKey:key, provider:currentProvider}).catch(()=>{});
-}
-async function testApiKey(){
-  const key=document.getElementById('apiKeyInp').value.trim();
-  if(!key){toast('⚠️ ใส่ API Key ก่อนทดสอบ');return;}
-  updateApiStatus('testing','⏳ กำลังทดสอบ...');
+
+async function testProvKey(id){
+  const val=(document.getElementById('pcinp_'+id)||{}).value?.trim();
+  if(!val){toast('⚠️ ใส่ API Key ก่อนทดสอบ');return;}
+  const st=document.getElementById('pcst_'+id);
+  if(st){st.style.display='block';st.className='pcstatus testing';st.textContent='⏳ กำลังทดสอบ...';}
   try{
-    // ทดสอบผ่าน Apps Script proxy
-    const r=await fetch(SCRIPT_URL,{
-      method:'POST',redirect:'follow',
-      headers:{'Content-Type':'text/plain'},
-      body:JSON.stringify({action:'testApiKey',apiKey:key,provider:currentProvider})
-    });
+    const r=await fetch(SCRIPT_URL,{method:'POST',redirect:'follow',headers:{'Content-Type':'text/plain'},
+      body:JSON.stringify({action:'testApiKey',apiKey:val,provider:id})});
     const d=await r.json();
     if(d.ok){
-      updateApiStatus('ok','✅ ใช้งานได้! ('+maskKey(key)+')');
-      toast('✅ API Key ใช้งานได้ปกติ');
-    } else {
-      updateApiStatus('err','❌ '+(d.error||'Key ไม่ถูกต้อง'));
-      toast('❌ '+(d.error||'API Key ไม่ถูกต้อง'));
+      if(st){st.className='pcstatus ok';st.textContent='✅ ใช้งานได้! ('+maskKey(val)+')';}
+      toast('✅ Key ใช้งานได้');
+    }else{
+      if(st){st.className='pcstatus err';st.textContent='❌ '+(d.error||'Key ไม่ถูกต้อง');}
+      toast('❌ '+(d.error||'Key ผิด'));
     }
   }catch(e){
-    updateApiStatus('err','❌ เชื่อมต่อไม่ได้: '+e.message.slice(0,50));
-    toast('❌ ทดสอบไม่ได้: '+e.message.slice(0,60));
+    if(st){st.className='pcstatus err';st.textContent='❌ เชื่อมต่อไม่ได้';}
+    toast('❌ ทดสอบไม่ได้');
   }
 }
-function clearApiKey(){
-  if(!confirm('ลบ API Key ออกจากเครื่อง?'))return;
-  localStorage.removeItem('bc_apikey');
-  document.getElementById('apiKeyInp').value='';
-  updateApiStatus('none','⚪ ยังไม่ได้ใส่ API Key');
-  toast('🗑️ ลบ API Key แล้ว');
+
+function useProvider(id){
+  const key=getApiKey(id);
+  if(!key){toast('⚠️ บันทึก API Key ก่อน');toggleProvCard(id);return;}
+  localStorage.setItem('bc_provider',id);
+  currentProvider=id;
+  renderProviderCards();
+  updateProvActiveBanner();
+  toast((PROVIDERS[id]?.icon||'')+ ' เปลี่ยนเป็น '+(PROVIDERS[id]?.name||id)+' แล้ว');
+}
+
+function delProvKey(id){
+  if(!confirm('ลบ Key ('+PROVIDERS[id]?.name+') ออก?'))return;
+  setApiKey(id,'');
+  if(localStorage.getItem('bc_provider')===id){
+    localStorage.setItem('bc_provider','gemini');
+    currentProvider='gemini';
+  }
+  renderProviderCards();
+  updateProvActiveBanner();
+  toast('🗑️ ลบ Key แล้ว');
 }
 function rCatTags(t){
   const cats=t==='inc'?_ic:_ec;
@@ -1808,10 +2036,10 @@ function parseDate(v){
 function fmt(n){return Number(n||0).toLocaleString('th-TH',{minimumFractionDigits:2,maximumFractionDigits:2});}
 function fmtK(n){return n>=10000?(n/1000).toFixed(1)+'K':fmt(n);}
 function updStats(){
-  // แปลง amount เป็น number ก่อนคำนวณ (ป้องกัน string จาก Sheets)
   recs.forEach(r=>{
     r.amount=parseFloat(r.amount)||0;
-    if(!r.type||r.type==='undefined')r.type='exp';
+    if(!r.type||r.type==='undefined') r.type='exp';
+    if(!r.zone) r.zone='biz'; // default zone สำหรับ record เก่า
   });
   const inc=recs.filter(r=>r.type==='inc').reduce((s,r)=>s+r.amount,0);
   const exp=recs.filter(r=>r.type==='exp').reduce((s,r)=>s+r.amount,0);
